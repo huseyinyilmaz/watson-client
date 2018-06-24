@@ -4,6 +4,8 @@
   "description": "Web client for watson api.",
   "main": "index.js",
   "scripts": {
+    "dev": "webpack --config webpack.config.js --mode development --watch",
+    "prod": "webpack --config webpack.config.js --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,5 +14,21 @@
   },
   "author": "Huseyin Yilmaz",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/yilmazhuseyin/watson-client#readme"
+  "homepage": "https://bitbucket.org/yilmazhuseyin/watson-client#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.5",
+    "babel-loader": "^7.1.4",
+    "eslint": "^5.0.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-flowtype": "^2.49.3",
+    "eslint-plugin-flowtype-errors": "^3.6.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
+    "flow-bin": "^0.75.0",
+    "webpack": "^4.12.1",
+    "webpack-cli": "^3.0.8"
+  }
 }
