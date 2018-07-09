@@ -1,0 +1,10 @@
+[ignore]
+
+[include]
+    ./core/static/core/js/
+[libs]
+
+[options]
+        module.name_mapper='.*\(.scss\)' -> 'empty/object'
+
+[lints]

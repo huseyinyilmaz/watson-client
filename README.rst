@@ -9,3 +9,12 @@
 
 
 Web client for watson.
+
+Good design examples
+--------------------
+- airbnb.com
+- https://themes.materializecss.com/pages/startup-zoom-out.html
+- mixpanel
+- dropbox
+- https://screenshotlayer.com/
+- https://urlbox.io/

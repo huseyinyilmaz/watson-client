@@ -17,6 +17,10 @@ module.exports = {
 
   devServer: {
     contentBase: './dist',
+    overlay: {
+      warnings: true,
+      errors: true,
+    },
     hot: true,
 
   },
@@ -25,6 +29,10 @@ module.exports = {
     path: path.join(PROJECT_ROOT, '/dist'),
     filename: '[name]-[id]-[hash].js',
     publicPath: '',
+  },
+
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
 
   module: {
@@ -63,6 +71,18 @@ module.exports = {
         }, {
           loader: 'sass-loader', // compiles Sass to CSS
         }],
+      },
+
+      {
+        test: /\.(woff|woff2|ttf|eot|jpe?g|png|gif|svg)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
       },
 
     ],
