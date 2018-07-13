@@ -5,12 +5,16 @@ import '../styles/home.scss';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
-// import {Router, Route} from 'react-router';
+import { Route, Switch } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import * as M from 'materialize-css';
 
 import { Base } from './core/base';
+import { lazy } from './core/lazy';
+import { LoginPage } from './login';
+// import { HomePage } from './home';
 import './core/materialize';
-import { AppProvider } from './core/context';
+// import { AppProvider } from './core/context';
 
 const getRoot = () => {
   let root = document.getElementById('watson_root');
@@ -28,9 +32,18 @@ const getRoot = () => {
 
 
 const App = (
-  <AppProvider>
-    <Base />
-  </AppProvider>
+  <BrowserRouter>
+    <Base>
+      <Switch>
+        <Route
+          exact
+          path="/"
+          component={lazy(import('./home').then(({ HomePage }) => (HomePage)))}
+        />
+        <Route exact path="/login" component={LoginPage} />
+      </Switch>
+    </Base>
+  </BrowserRouter>
 );
 
 ReactDOM.render(
@@ -38,21 +51,11 @@ ReactDOM.render(
   getRoot(),
 );
 
-// ReactDOM.render(
-//   <Router>
-//     <Route component={Main}>
-//       <Route path="/" component={Home}/>
-//       <Route path="/cars" component={Car}/>
-//       <Route path="/about" component={About}/>
-//     </Route>
-//   </Router>,
-//   getRoot(),
-// );
+// <Route path="/cars" component={Car}/>
+// <Route path="/about" component={About}/>
 
 const options = {};
 const elems = document.querySelectorAll('.sidenav');
 const instances = M.Sidenav.init(elems, options);
 console.log(instances);
 hot(module)(App); // eslint-ignore-line import /no-default-export
-
-console.log('test');

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 
-
 type LoginProviderProps = {
   children: React.Element<any>,
 };

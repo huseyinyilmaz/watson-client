@@ -1,17 +1,19 @@
 // @flow
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-type HeaderProps = {
-  user: any,
-};
+// type HeaderProps = {
+//   user: any,
+//   openLoginDialog: () => void,
+// };
 
-const Header = ({ user }: HeaderProps) => (
+const Header = () => (
   <div>
     <nav>
       <div className="nav-wrapper">
-        <a href="#!" className="brand-logo">
+        <Link to="/" className="brand-logo">
           Logo
-        </a>
+        </Link>
         <a href="#!" data-target="mobile-demo" className="sidenav-trigger">
           <i className="fa fa-bars fa-2x" aria-hidden="true" />
         </a>
@@ -37,10 +39,13 @@ const Header = ({ user }: HeaderProps) => (
             </a>
           </li>
           <li>
-            <a className="waves-effect waves-light btn" href="login.html">
+
+            <Link
+              to="/login"
+              className="waves-effect waves-light btn"
+            >
               Login
-              { user }
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

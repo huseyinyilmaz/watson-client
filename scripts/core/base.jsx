@@ -1,20 +1,24 @@
 // @flow
 import * as React from 'react';
 import { Header } from './header';
-import { LoginDialog } from '../dialogs/login';
 import { AppContext } from './context';
 
-const Base = () => (
+type BaseProps = {
+  children: React.Element<any>,
+};
+
+const Base = (props: BaseProps) => (
   <AppContext.Consumer>
     {
-      context => {
-        return (
-          <React.Fragment>
-            <Header user={context.state.user} />
-            <LoginDialog />
-          </React.Fragment>
-        );
-      }
+      context => (
+        <React.Fragment>
+          <Header
+            user={context.state.user}
+            openLoginDialog={context.actions.openLoginDialog}
+          />
+          { props.children }
+        </React.Fragment>
+      )
     }
   </AppContext.Consumer>);
 

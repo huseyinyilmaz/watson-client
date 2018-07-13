@@ -42,6 +42,9 @@ module.exports = {
     // Sometimes arguments are helpfull to show the function signature
     // arguments starting with underscore means they are not used.
     "no-unused-vars": ["error", {"argsIgnorePattern": "^_"}],
+
+    "jsx-a11y/label-has-for": 0,
+
   },
 
   "plugins": [
