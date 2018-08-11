@@ -1,46 +1,91 @@
 // @flow
-
 import * as React from 'react';
+import { apis } from './api';
 
+// import type { Apis } from './api';
+import { tokenStore } from './store';
 
 type AppProviderProps = {
   children: React.Element<any>,
 };
 
+export type AppStatus = 'initializing' | 'initialized';
+
 type AppProviderState = {
   user: any,
-  loginVisible: boolean,
+  status: AppStatus,
+
 };
 
+const anonUser = undefined;
+
 const defaultAppProviderState: AppProviderState = {
-  user: undefined,
-  loginVisible: false,
+  user: anonUser,
+  status: 'initializing',
 };
 
 const AppContext = React.createContext(
   {
     state: defaultAppProviderState,
-    actions: { openLoginDialog: () => undefined },
+    actions: {
+      openLoginDialog: () => undefined,
+      setToken: () => undefined,
+      removeToken: () => undefined,
+    },
   },
 );
 
 class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
+  constructor(props: AppProviderProps) {
+    super(props);
+    this.state.status = 'initialized';
+  }
+
+
   state = defaultAppProviderState;
+
+  componentDidMount = () => {
+    this.updateSession();
+  }
 
   setUser(user: any) {
     this.setState({ user });
   }
 
-  setLoginVisible(loginVisible: boolean) {
-    this.setState({ loginVisible });
+  getToken = tokenStore.get
+
+  setToken = (sessionToken: string) => {
+    tokenStore.set(sessionToken);
+    this.updateSession();
   }
 
-  openLoginDialog = () => {
-    this.setLoginVisible(true);
+  removeToken = () => {
+    tokenStore.remove();
+    this.updateSession();
   }
 
-  closeLoginDialog() {
-    this.setLoginVisible(true);
+  updateSession = () => {
+    const sessionToken = tokenStore.get();
+    if (sessionToken) {
+      // get session info
+      apis.accounts.sessionGet().then(
+        (session) => {
+          if (session.logged_in) {
+            this.setState({ user: session.user });
+          }
+        },
+      ).catch(
+        (e) => {
+          console.log('Error', e);
+          if (e.response.status === 403) {
+            console.log('Token is invalid delete the token');
+            this.removeToken();
+          }
+        },
+      );
+    } else {
+      this.setState({ user: undefined });
+    }
   }
 
   render() {
@@ -49,9 +94,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       state: this.state,
       actions: {
         setUser: this.setUser,
-        setLoginVisible: this.setLoginVisible,
-        openLoginDialog: this.openLoginDialog,
-        closeLoginDialog: this.closeLoginDialog,
+        setToken: this.setToken,
+        removeToken: this.removeToken,
       },
     };
     const { children } = this.props;
@@ -61,7 +105,6 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       </AppContext.Provider>);
   }
 }
-
 
 export {
   AppContext,

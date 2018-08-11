@@ -3,18 +3,15 @@ import * as React from 'react';
 
 import Loadable from 'react-loadable';
 
+import { Loading } from './loading';
 
-const Loading = () => (
-  <div>
-    Loading
-  </div>);
 
 const lazy = (componentPromise: any) => {
-  const loadable = Loadable({
-    loader: () => componentPromise,
+  const LazyLoadable = Loadable({
+    loader: componentPromise,
     loading: Loading,
   });
-  return loadable;
+  return (<LazyLoadable />);
 };
 
 export { lazy };

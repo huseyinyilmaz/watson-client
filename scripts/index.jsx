@@ -1,20 +1,19 @@
 // @flow
 import 'babel-polyfill';
-import '../styles/home.scss';
-
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import * as M from 'materialize-css';
-
 import { Base } from './core/base';
-import { lazy } from './core/lazy';
-import { LoginPage } from './login';
+// import { LoginPage } from './login';
 // import { HomePage } from './home';
 import './core/materialize';
 // import { AppProvider } from './core/context';
+import { LazyHomePage } from './home/lazy';
+import { LazyLoginPage } from './login/lazy';
+import { LazyOrganizationsPage } from './organizations/lazy';
 
 const getRoot = () => {
   let root = document.getElementById('watson_root');
@@ -30,7 +29,6 @@ const getRoot = () => {
   return root;
 };
 
-
 const App = (
   <BrowserRouter>
     <Base>
@@ -38,9 +36,10 @@ const App = (
         <Route
           exact
           path="/"
-          component={lazy(import('./home').then(({ HomePage }) => (HomePage)))}
+          component={LazyHomePage}
         />
-        <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/organizations" component={LazyOrganizationsPage} />
+        <Route exact path="/login" component={LazyLoginPage} />
       </Switch>
     </Base>
   </BrowserRouter>
@@ -56,6 +55,5 @@ ReactDOM.render(
 
 const options = {};
 const elems = document.querySelectorAll('.sidenav');
-const instances = M.Sidenav.init(elems, options);
-console.log(instances);
+M.Sidenav.init(elems, options);
 hot(module)(App); // eslint-ignore-line import /no-default-export

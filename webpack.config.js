@@ -22,9 +22,6 @@ module.exports = {
       errors: true,
     },
     hot: true,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
     historyApiFallback: true,
   },
 

@@ -2,3 +2,7 @@
 @import "variables";
 @import "~font-awesome/scss/font-awesome";
 @import "~materialize-css/sass/materialize";
+
+#general_error_message {
+  color: $error-message;
+}
