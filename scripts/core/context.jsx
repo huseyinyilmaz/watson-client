@@ -13,6 +13,7 @@ export type AppStatus = 'initializing' | 'initialized';
 
 type AppProviderState = {
   user: any,
+  organizations: Array<any>,
   status: AppStatus,
 
 };
@@ -21,6 +22,7 @@ const anonUser = undefined;
 
 const defaultAppProviderState: AppProviderState = {
   user: anonUser,
+  organizations: [],
   status: 'initializing',
 };
 
@@ -52,6 +54,10 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     this.setState({ user });
   }
 
+  setOrganizations(organizations: Array<any>) {
+    this.setState({ organizations });
+  }
+
   getToken = tokenStore.get
 
   setToken = (sessionToken: string) => {
@@ -71,7 +77,10 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       apis.accounts.sessionGet().then(
         (session) => {
           if (session.logged_in) {
-            this.setState({ user: session.user });
+            this.setState({
+              user: session.user,
+              organizations: session.organizations,
+            });
           }
         },
       ).catch(
@@ -94,6 +103,7 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       state: this.state,
       actions: {
         setUser: this.setUser,
+        setOrganizations: this.setOrganizations,
         setToken: this.setToken,
         removeToken: this.removeToken,
       },
