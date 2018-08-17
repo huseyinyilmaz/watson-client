@@ -23,7 +23,7 @@ class OrganizationsPage extends React.Component<OrganizationsPageProps> {
 
             const orgs = context.state.organizations.map(
               o => (
-                <div className="card small">
+                <div className="card small" key={o.id}>
                   <div className="card-content">
                     <span className="card-title">
                       {o.name}
