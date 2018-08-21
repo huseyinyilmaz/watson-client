@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { parse } from 'date-fns';
+
 import { apis } from './api';
 
 // import type { Apis } from './api';
@@ -11,8 +13,18 @@ type AppProviderProps = {
 
 export type AppStatus = 'initializing' | 'initialized';
 
+type User = {
+  id: number,
+  defaultOrganization: number,
+  currentOrganization: number,
+  email: string,
+  emailVerified: boolean,
+  fullName: string,
+  dateJoined: Date,
+}
+
 type AppProviderState = {
-  user: any,
+  user?: User,
   organizations: Array<any>,
   status: AppStatus,
 
@@ -77,8 +89,18 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       apis.accounts.sessionGet().then(
         (session) => {
           if (session.logged_in) {
+            const user = {
+              id: session.user.id,
+              defaultOrganization: session.user.defaultOrganization,
+              currentOrganization: session.user.defaultOrganization,
+              email: session.user.email,
+              emailVerified: session.user.email_verified,
+              fullName: session.user.full_name,
+              dateJoined: parse(session.user.date_joined),
+            };
+
             this.setState({
-              user: session.user,
+              user,
               organizations: session.organizations,
             });
           }
