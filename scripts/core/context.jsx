@@ -23,9 +23,18 @@ type User = {
   dateJoined: Date,
 }
 
+type Organization = {
+  id: number,
+  company: string,
+  location: string,
+  name: string,
+  slug: string,
+  url: string,
+}
+
 type AppProviderState = {
   user?: User,
-  organizations: Array<any>,
+  organizations: Array<Organization>,
   status: AppStatus,
 
 };
@@ -89,20 +98,20 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       apis.accounts.sessionGet().then(
         (session) => {
           if (session.logged_in) {
+            const { organizations, user: usr } = session.organizations;
+
             const user = {
-              id: session.user.id,
-              defaultOrganization: session.user.defaultOrganization,
-              currentOrganization: session.user.defaultOrganization,
-              email: session.user.email,
-              emailVerified: session.user.email_verified,
-              fullName: session.user.full_name,
-              dateJoined: parse(session.user.date_joined),
+              id: usr.id,
+              defaultOrganization: usr.defaultOrganization,
+              currentOrganization: usr.defaultOrganization,
+              email: usr.email,
+              emailVerified: usr.email_verified,
+              fullName: usr.full_name,
+              dateJoined: parse(usr.date_joined),
             };
 
-            this.setState({
-              user,
-              organizations: session.organizations,
-            });
+
+            this.setState({ user, organizations });
           }
         },
       ).catch(
