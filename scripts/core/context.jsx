@@ -98,7 +98,7 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       apis.accounts.sessionGet().then(
         (session) => {
           if (session.logged_in) {
-            const { organizations, user: usr } = session.organizations;
+            const { organizations, user: usr } = session;
 
             const user = {
               id: usr.id,
