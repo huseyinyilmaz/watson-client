@@ -14,7 +14,7 @@ import './core/materialize';
 import { LazyHomePage } from './home/lazy';
 import { LazyLoginPage } from './login/lazy';
 import { LazyOrganizationsPage } from './organizations/lazy';
-import { LazyScreenshotsPage } from './screenshots/lazy';
+import { LazyScreenshotsPage, LazyNewScreenshotPage } from './screenshots/lazy';
 
 const getRoot = () => {
   let root = document.getElementById('watson_root');
@@ -41,6 +41,7 @@ const App = (
         />
         <Route exact path="/organizations" component={LazyOrganizationsPage} />
         <Route exact path="/screenshots" component={LazyScreenshotsPage} />
+        <Route exact path="/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/login" component={LazyLoginPage} />
       </Switch>
     </Base>

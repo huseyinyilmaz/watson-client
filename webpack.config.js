@@ -28,7 +28,7 @@ module.exports = {
   output: {
     path: path.join(PROJECT_ROOT, '/dist'),
     filename: '[name]-[id]-[hash].js',
-    publicPath: '',
+    publicPath: '/',
   },
 
   resolve: {

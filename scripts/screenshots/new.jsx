@@ -2,16 +2,14 @@
 
 import * as React from 'react';
 
-import '../../styles/screenshots.scss';
-
-import { Link } from 'react-router-dom';
+import '../../styles/screenshots-new.scss';
 
 import { AppContext } from '../core/context';
 
 
-type ScreenshotsPageProps = any
+type NewScreenshotPageProps = any
 
-class ScreenshotsPage extends React.Component<ScreenshotsPageProps> {
+class NewScreenshotPage extends React.Component<NewScreenshotPageProps> {
   mock() {
     return this;
   }
@@ -27,10 +25,7 @@ class ScreenshotsPage extends React.Component<ScreenshotsPageProps> {
                 <div className="section">
                   <div className="row">
                     <div className="col s12 m6 l4">
-                      Screenshots:
-                      <Link to="/screenshots/new">
-                        Take a new screenshot
-                      </Link>
+                      New Screenshot
                     </div>
                   </div>
                 </div>
@@ -41,4 +36,4 @@ class ScreenshotsPage extends React.Component<ScreenshotsPageProps> {
   }
 }
 
-export { ScreenshotsPage };
+export { NewScreenshotPage };
