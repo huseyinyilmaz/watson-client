@@ -45,6 +45,7 @@ module.exports = {
 
     "jsx-a11y/label-has-for": 0,
 
+    "react/jsx-one-expression-per-line": 0
   },
 
   "plugins": [

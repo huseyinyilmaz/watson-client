@@ -1,6 +1,6 @@
 import { getEnv } from './config';
 
-const initialize = (context) => {
+const initialize = async (context) => {
   getEnv().then();
 };
 

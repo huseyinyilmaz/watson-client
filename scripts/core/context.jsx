@@ -36,7 +36,12 @@ type AppProviderState = {
   user?: User,
   organizations: Array<Organization>,
   status: AppStatus,
-
+  constants: any,
+  initialization: {
+    context: boolean,
+    constants: boolean,
+  },
+  constants: any,
 };
 
 const anonUser = undefined;
@@ -45,6 +50,11 @@ const defaultAppProviderState: AppProviderState = {
   user: anonUser,
   organizations: [],
   status: 'initializing',
+  initialization: {
+    context: false,
+    constants: false,
+  },
+  constants: {},
 };
 
 const AppContext = React.createContext(
@@ -59,15 +69,16 @@ const AppContext = React.createContext(
 );
 
 class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
-  constructor(props: AppProviderProps) {
-    super(props);
-    this.state.status = 'initialized';
-  }
+  // constructor(props: AppProviderProps) {
+  //   super(props);
+  //   this.state.status = 'initialized';
+  // }
 
 
   state = defaultAppProviderState;
 
   componentDidMount = () => {
+    this.initializeConstants();
     this.updateSession();
   }
 
@@ -84,6 +95,51 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
   setToken = (sessionToken: string) => {
     tokenStore.set(sessionToken);
     this.updateSession();
+  }
+
+  setContextInitialized = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      initialization: {
+        ...prevState.initialization,
+        context: true,
+      },
+    }));
+    this.updateStatus();
+  }
+
+  setConstantsInitialized = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      initialization: {
+        ...prevState.initialization,
+        constants: true,
+      },
+    }));
+    this.updateStatus();
+  }
+
+  initializeConstants = () => {
+    apis.core.constantsGet().then(
+      (constants) => {
+        this.setState({ constants });
+        this.setConstantsInitialized();
+      },
+    );
+    return undefined;
+  }
+
+  updateStatus = () => {
+    this.setState((prevState) => {
+      if (prevState.initialization.constants && prevState.initialization.context) {
+        return {
+          ...prevState,
+          status: 'initialized',
+        };
+      } else {
+        return prevState;
+      }
+    });
   }
 
   removeToken = () => {
@@ -109,9 +165,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
               fullName: usr.full_name,
               dateJoined: parse(usr.date_joined),
             };
-
-
             this.setState({ user, organizations });
+            this.setContextInitialized();
           }
         },
       ).catch(
@@ -121,10 +176,12 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
             console.log('Token is invalid delete the token');
             this.removeToken();
           }
+          this.setContextInitialized();
         },
       );
     } else {
-      this.setState({ user: undefined });
+      this.setState({ user: anonUser });
+      this.setContextInitialized();
     }
   }
 
