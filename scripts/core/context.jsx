@@ -158,8 +158,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
 
             const user = {
               id: usr.id,
-              defaultOrganization: usr.defaultOrganization,
-              currentOrganization: usr.defaultOrganization,
+              defaultOrganization: usr.default_organization,
+              currentOrganization: usr.default_organization,
               email: usr.email,
               emailVerified: usr.email_verified,
               fullName: usr.full_name,

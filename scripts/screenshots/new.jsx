@@ -3,12 +3,13 @@
 import * as React from 'react';
 
 import '../../styles/screenshots-new.scss';
+import { apis } from '../core/api';
 
 import { AppContext } from '../core/context';
 
 declare var M: any;
 
-type NewScreenshotPageProps = any
+type NewScreenshotPageProps = { organization: number };
 
 type NewScreenshotPageState =
   {|
@@ -25,7 +26,8 @@ const defaultNewScreenshotState: NewScreenshotPageState = {
   browser: '',
 };
 
-class NewScreenshotPage extends React.Component<NewScreenshotPageProps, NewScreenshotPageState> {
+class NewScreenshotPageInternal
+  extends React.Component<NewScreenshotPageProps, NewScreenshotPageState> {
   state = defaultNewScreenshotState
 
   componentDidMount() {
@@ -47,6 +49,24 @@ class NewScreenshotPage extends React.Component<NewScreenshotPageProps, NewScree
 
   handleBrowserOnChange = (e: any) => {
     this.setState({ browser: e.target.value });
+  }
+
+  handleOnSubmit = () => {
+    const {
+      url,
+      delay,
+      dimension,
+      browser,
+    } = this.state;
+    const { organization } = this.props;
+
+    apis.screenshots.screenshotCreate(
+      url,
+      delay,
+      dimension,
+      browser,
+      organization,
+    ).then((data) => { console.log('result: ', data); });
   }
 
   render() {
@@ -85,7 +105,14 @@ class NewScreenshotPage extends React.Component<NewScreenshotPageProps, NewScree
               dimension,
               browser,
             } = this.state;
-            console.log(dimension, browser);
+
+            const isValid = (url && delay && dimension && browser);
+            let submitButtonClass = 'submit-button waves-effect waves-light btn';
+
+            if (!isValid) {
+              submitButtonClass += ' disabled';
+            }
+
             return (
               <div className="container new-screenshot-container">
                 <div className="section">
@@ -154,7 +181,11 @@ class NewScreenshotPage extends React.Component<NewScreenshotPageProps, NewScree
 
                   <div className="row">
                     <div className="input-field col s12">
-                      <button type="button" className="submit-button waves-effect waves-light btn">
+                      <button
+                        type="button"
+                        className={submitButtonClass}
+                        onClick={this.handleOnSubmit}
+                      >
                         Create a Screenshot
                         <i className="fas fa-chevron-right" />
                       </button>
@@ -168,5 +199,23 @@ class NewScreenshotPage extends React.Component<NewScreenshotPageProps, NewScree
       </AppContext.Consumer>);
   }
 }
+
+const NewScreenshotPage = () => (
+  <AppContext.Consumer>
+    {
+      (context) => {
+        const { state: { user } } = context;
+        let currentOrganization;
+        if (user) {
+          currentOrganization = user.currentOrganization; // eslint-disable-line prefer-destructuring, max-len
+        } else {
+          currentOrganization = -1;
+        }
+        console.log(currentOrganization);
+
+        return (<NewScreenshotPageInternal organization={currentOrganization} />);
+      }
+    }
+  </AppContext.Consumer>);
 
 export { NewScreenshotPage };

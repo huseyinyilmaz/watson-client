@@ -27,6 +27,12 @@ class BaseAPI {
     return axios.get(url, config);
   }
 
+  post(url: string, data: {}) {
+    const authHeaders = this.getAuthHeaders();
+    const config = { headers: authHeaders };
+    return axios.post(url, data, config);
+  }
+
   delete(url: string) {
     const authHeaders = this.getAuthHeaders();
     const config = { headers: authHeaders };
