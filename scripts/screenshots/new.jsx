@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react';
+import { Redirect } from 'react-router';
 
 import '../../styles/screenshots-new.scss';
 import { apis } from '../core/api';
@@ -17,6 +18,12 @@ type NewScreenshotPageState =
    delay: number,
    dimension: string,
    browser: string,
+
+   urlError: string,
+   generalError: string,
+
+   screenshot: any,
+
    |}
 
 const defaultNewScreenshotState: NewScreenshotPageState = {
@@ -24,6 +31,10 @@ const defaultNewScreenshotState: NewScreenshotPageState = {
   delay: 3,
   dimension: '',
   browser: '',
+
+  urlError: '',
+  generalError: '',
+  screenshot: undefined,
 };
 
 class NewScreenshotPageInternal
@@ -66,10 +77,35 @@ class NewScreenshotPageInternal
       dimension,
       browser,
       organization,
-    ).then((data) => { console.log('result: ', data); });
+    ).then((data) => {
+      this.setState({ screenshot: data });
+    })
+      .catch((e) => {
+        window.thisError = e;
+        if (e.response && e.response.status) {
+          switch (e.response.status) {
+            case 400:
+              if (e.response.data.address) {
+                this.setState({ urlError: e.response.data.address });
+              }
+              if (e.response.data.non_field_errors) {
+                this.setState({ generalError: e.response.data.non_field_errors });
+              }
+              break;
+            default:
+              this.setState({ generalError: 'There were a problem with the server response. Please try again in a few seconds.' });
+              break;
+          }
+        }
+      });
   }
 
   render() {
+    const { screenshot } = this.state;
+    if (screenshot) {
+      const fullUrl = `/screenshots/detail/${screenshot.id}`;
+      return (<Redirect to={fullUrl} />);
+    }
     return (
       <AppContext.Consumer>
         {
@@ -87,16 +123,12 @@ class NewScreenshotPageInternal
             )));
 
             let browsers = [(
-              <option
-                value=""
-                key="default"
-                disabled
-              >
+              <option value="" key="default" disabled>
                 Choose your browser
               </option>
             )];
             browsers = browsers.concat(context.state.constants.browsers.map(b => (
-              <option value={b} key={b}>{b}</option>
+              <option value={b.value} key={b.value}>{b.name}</option>
             )));
 
             const {
@@ -104,6 +136,9 @@ class NewScreenshotPageInternal
               delay,
               dimension,
               browser,
+
+              urlError,
+              generalError,
             } = this.state;
 
             const isValid = (url && delay && dimension && browser);
@@ -112,6 +147,25 @@ class NewScreenshotPageInternal
             if (!isValid) {
               submitButtonClass += ' disabled';
             }
+
+            // ====================== set password error =====================
+            let urlErrorMessage = null;
+            let urlClass = 'validate';
+            if (urlError) {
+              urlErrorMessage = (
+                <span className="helper-text" data-error={urlError} data-success="right" />
+              );
+              urlClass = 'validate invalid';
+            }
+            // ====================== set general error ======================
+            let generalErrorMessage = null;
+            if (generalError) {
+              generalErrorMessage = (
+                <div id="general_error_message">
+                  {generalError}
+                </div>);
+            }
+
 
             return (
               <div className="container new-screenshot-container">
@@ -127,13 +181,14 @@ class NewScreenshotPageInternal
                       <input
                         id="url"
                         type="url"
-                        className="validate"
+                        className={urlClass}
                         onChange={this.handleUrlOnChange}
                         value={url}
                       />
                       <label htmlFor="url">
                         Url
                       </label>
+                      { urlErrorMessage }
                     </div>
                   </div>
 
@@ -191,7 +246,7 @@ class NewScreenshotPageInternal
                       </button>
                     </div>
                   </div>
-
+                  { generalErrorMessage }
                 </div>
               </div>);
           }
@@ -211,8 +266,6 @@ const NewScreenshotPage = () => (
         } else {
           currentOrganization = -1;
         }
-        console.log(currentOrganization);
-
         return (<NewScreenshotPageInternal organization={currentOrganization} />);
       }
     }

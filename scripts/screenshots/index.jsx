@@ -8,12 +8,46 @@ import { Link } from 'react-router-dom';
 
 import { AppContext } from '../core/context';
 
+import { apis } from '../core/api';
 
-type ScreenshotsPageProps = any
 
-class ScreenshotsPage extends React.Component<ScreenshotsPageProps> {
-  mock() {
-    return this;
+type ScreenshotsPageProps = { organization: number };
+type ScreenshotPageState = { screenshots: any };
+
+const defaultScreenshotPageState = {
+  screenshots: undefined,
+};
+
+const Image = ({ screenshot }: {screenshot: any}) => {
+  console.log('screenshot: ', screenshot);
+  const link = `/screenshots/detail/${screenshot.id}`;
+  return (
+    <div className="col s12 m4 l3" key={screenshot.id}>
+      <div className="card small">
+        <div className="card-image">
+          <img src={screenshot.image} alt={screenshot.address} />
+        </div>
+        <div className="card-content">
+          <p>
+            {screenshot.address}
+          </p>
+        </div>
+        <div className="card-action">
+          <Link to={link}>Details</Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, ScreenshotPageState> {
+  state = defaultScreenshotPageState
+
+  componentDidMount = () => {
+    const { organization } = this.props;
+    apis.screenshots.screenshotsGet(organization).then((data) => {
+      this.setState({ screenshots: data });
+    });
   }
 
   render() {
@@ -22,17 +56,33 @@ class ScreenshotsPage extends React.Component<ScreenshotsPageProps> {
         {
           (context) => {
             console.log(context);
+            const { screenshots } = this.state;
+            let screenshotDivs = [];
+            if (screenshots) {
+              screenshotDivs = screenshots.map(s => (
+                <Image screenshot={s} />
+              ));
+            }
             return (
               <div className="container">
                 <div className="section">
                   <div className="row">
-                    <div className="col s12 m6 l4">
+                    <div className="col s12">
                       Screenshots:
+                    </div>
+                  </div>
+                  <div className="row">
+                    { screenshotDivs }
+                  </div>
+
+                  <div className="row">
+                    <div className="col s12">
                       <Link to="/screenshots/new">
                         Take a new screenshot
                       </Link>
                     </div>
                   </div>
+
                 </div>
               </div>);
           }
@@ -40,5 +90,21 @@ class ScreenshotsPage extends React.Component<ScreenshotsPageProps> {
       </AppContext.Consumer>);
   }
 }
+
+const ScreenshotsPage = () => (
+  <AppContext.Consumer>
+    {
+      (context) => {
+        const { state: { user } } = context;
+        let currentOrganization;
+        if (user) {
+          currentOrganization = user.currentOrganization; // eslint-disable-line prefer-destructuring, max-len
+        } else {
+          currentOrganization = -1;
+        }
+        return (<ScreenshotsPageInternal organization={currentOrganization} />);
+      }
+    }
+  </AppContext.Consumer>);
 
 export { ScreenshotsPage };

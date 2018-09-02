@@ -17,4 +17,11 @@ const LazyNewScreenshotPage = Loadable(
   },
 );
 
-export { LazyScreenshotsPage, LazyNewScreenshotPage };
+const LazyScreenshotDetailPage = Loadable(
+  {
+    loader: () => (import('./detail').then(({ ScreenshotDetailPage }) => (ScreenshotDetailPage))),
+    loading: Loading,
+  },
+);
+
+export { LazyScreenshotsPage, LazyNewScreenshotPage, LazyScreenshotDetailPage };

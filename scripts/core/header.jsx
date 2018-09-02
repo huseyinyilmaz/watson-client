@@ -65,11 +65,10 @@ class Header extends React.Component<HeaderProps> {
             <Link to="/" className="brand-logo">
               Watson
             </Link>
-            <a href="#!" data-target="mobile-demo" className="sidenav-trigger">
+            <a href="#!" data-target="mobile-menu" className="sidenav-trigger">
               <i className="fa fa-bars fa-2x" aria-hidden="true" />
             </a>
             <ul className="right hide-on-med-and-down">
-
               <li>
                 { screenshotButton }
               </li>
@@ -77,58 +76,21 @@ class Header extends React.Component<HeaderProps> {
               <li>
                 { organizationButton }
               </li>
-
-              <li>
-                <a href="sass.html">
-                  Sass
-                </a>
-              </li>
-              <li>
-                <a href="badges.html">
-                  Components
-                </a>
-              </li>
-              <li>
-                <a href="collapsible.html">
-                  Javascript
-                </a>
-              </li>
-              <li>
-                <a href="mobile.html">
-                  Mobile
-                </a>
-              </li>
               <li>
                 { session }
               </li>
             </ul>
           </div>
         </nav>
-        <ul className="sidenav" id="mobile-demo">
+        <ul className="sidenav" id="mobile-menu">
           <li>
-            <a className="waves-effect waves-light btn" href="login.html">
-              Login
-            </a>
+            { session }
           </li>
           <li>
-            <a href="sass.html">
-              Sass
-            </a>
+            { screenshotButton }
           </li>
           <li>
-            <a href="badges.html">
-              Components
-            </a>
-          </li>
-          <li>
-            <a href="collapsible.html">
-              Javascript
-            </a>
-          </li>
-          <li>
-            <a href="mobile.html">
-              Mobile
-            </a>
+            { organizationButton }
           </li>
         </ul>
       </div>);

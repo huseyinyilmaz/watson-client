@@ -21,9 +21,12 @@ class BaseAPI {
     }
   }
 
-  get(url: string) {
+  get(url: string, extraConfig: {} = {}) {
     const authHeaders = this.getAuthHeaders();
-    const config = { headers: authHeaders };
+    const config = {
+      headers: authHeaders,
+      ...extraConfig,
+    };
     return axios.get(url, config);
   }
 
