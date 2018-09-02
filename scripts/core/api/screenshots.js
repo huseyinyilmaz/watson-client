@@ -29,7 +29,7 @@ class ScreenshotsAPI extends (BaseAPI) {
   screenshotsGet = (organization: number) => {
     const fullUrl = `${serverUrl}/screenshots/screenshot/`;
     const params = { organization };
-    return this.get(fullUrl, { params }).then(data => data.data);
+    return this.get(fullUrl, { params }).then(data => data.data.results);
   }
 }
 
