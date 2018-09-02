@@ -5,6 +5,7 @@ import * as React from 'react';
 import '../../styles/screenshots-detail.scss';
 
 import { apis } from '../core/api';
+import { PreLoader } from '../core/loading';
 
 // import { Link } from 'react-router-dom';
 
@@ -36,8 +37,19 @@ class ScreenshotDetailPage
 
     componentDidMount = () => {
       const { match: { params: { id } } } = this.props;
+      this.getImage(id);
+    }
+
+    getImage = (id: number) => {
       apis.screenshots.screenshotGet(id).then((data) => {
+        console.log('getImage', id);
         this.setState({ screenshot: data });
+        if (!data.image) {
+          setTimeout(
+            () => this.getImage(id),
+            2000,
+          );
+        }
       });
     }
 
@@ -60,7 +72,7 @@ class ScreenshotDetailPage
       if (screenshot.image) {
         image = (<img src={screenshot.image} alt="screenshot.address" className="responsive-img" />);
       } else {
-        image = null;
+        image = (<PreLoader />);
       }
 
       return (
