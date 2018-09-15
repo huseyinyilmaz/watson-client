@@ -21,7 +21,7 @@ class ScreenshotsAPI extends (BaseAPI) {
     ).then(data => data.data);
   }
 
-  screenshotGet = (id: number) => {
+  screenshotGet = (id: string) => {
     const fullUrl = `${serverUrl}/screenshots/screenshot/${id}/`;
     return this.get(fullUrl).then(data => data.data);
   }

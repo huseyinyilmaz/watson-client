@@ -40,7 +40,7 @@ class ScreenshotDetailPage
       this.getImage(id);
     }
 
-    getImage = (id: number) => {
+    getImage = (id: string) => {
       apis.screenshots.screenshotGet(id).then((data) => {
         console.log('getImage', id);
         this.setState({ screenshot: data });

@@ -13,6 +13,7 @@ import './core/materialize';
 // import { AppProvider } from './core/context';
 import { LazyHomePage } from './home/lazy';
 import { LazyLoginPage } from './login/lazy';
+import { LazyDiffPage } from './diff/lazy';
 import { LazyOrganizationsPage } from './organizations/lazy';
 import {
   LazyScreenshotsPage,
@@ -48,6 +49,7 @@ const App = (
         <Route exact path="/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
         <Route exact path="/login" component={LazyLoginPage} />
+        <Route exact path="/diff/:image1/:image2" component={LazyDiffPage} />
       </Switch>
     </Base>
   </BrowserRouter>
