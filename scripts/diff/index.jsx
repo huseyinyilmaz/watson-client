@@ -9,7 +9,7 @@ import '../../styles/screenshots.scss';
 import { AppContext } from '../core/context';
 
 import { apis } from '../core/api';
-
+import { Image } from './image';
 
 type DiffPageProps = { image1: string, image2: string };
 
@@ -26,8 +26,15 @@ const SideBySide = ({ image1, image2 }: {image1: any, image2: any}) => {
   console.log(image1, image2);
   let img1;
   let img2;
+  const canvas1 = document.createElement('canvas');
   if (image1 && image1.image) {
-    img1 = (<img className="responsive-img" alt="image1" src={image1.image} />);
+    img1 = (
+      <Image
+        className="responsive-img"
+        alt="image1"
+        src={image1.image}
+        canvas={canvas1}
+      />);
   }
   if (image2 && image2.image) {
     img2 = (<img className="responsive-img" alt="image2" src={image2.image} />);
@@ -86,10 +93,15 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
   }
 
   tabRef: any
+
   img1Ref: any
+
   img2Ref: any
+
   canvas1: any
+
   canvas2: any
+
   canvasdiff: any
 
   render() {

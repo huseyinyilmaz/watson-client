@@ -10,6 +10,11 @@
 
 Web client for watson.
 
+
+Upgrade dependencies
+--------------------
+
+
 Good design examples
 --------------------
 - airbnb.com

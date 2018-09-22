@@ -45,6 +45,9 @@ module.exports = {
 
     "jsx-a11y/label-has-for": 0,
 
+    "jsx-a11y/label-has-associated-control": [2, {"required": {
+      "some": [ "nesting", "id" ]
+    }}],
     "react/jsx-one-expression-per-line": 0
   },
 
