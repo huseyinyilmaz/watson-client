@@ -25,7 +25,7 @@ class Image extends React.Component<ImageProps, ImageState> {
     context.drawImage(img, 0, 0);
     window.ctx = context;
     window.cnv = canvas;
-    // window.ctx.getImageData(1, 1, 1, 1);
+    window.ctx.getImageData(1, 1, 1, 1);
     console.log('image loaded: ', context);
   }
 

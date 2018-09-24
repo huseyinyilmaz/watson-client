@@ -11,33 +11,54 @@ import { AppContext } from '../core/context';
 import { apis } from '../core/api';
 import { Image } from './image';
 
+// ==================== Main page props and state ====================
 type DiffPageProps = { image1: string, image2: string };
 
 type DiffPageState = {image1: any,
-                      image2: any};
+                      image2: any,
+                      canvasRef1: any,
+                      canvasRef2: any,
+                     };
 
 const defaultDiffPageState = {
   image1: undefined,
   image2: undefined,
+  canvasRef1: undefined,
+  canvasRef2: undefined,
 };
 
 
-const SideBySide = ({ image1, image2 }: {image1: any, image2: any}) => {
+// ====================== Side by side tab props =====================
+type SideBySideProps = {
+  image1: any,
+  image2: any,
+  onLoadHandler1: any,
+  onLoadHandler2: any,
+}
+const SideBySide = ({
+  image1, image2,
+  onLoadHandler1, onLoadHandler2,
+}: SideBySideProps) => {
   console.log(image1, image2);
   let img1;
   let img2;
-  const canvas1 = document.createElement('canvas');
   if (image1 && image1.image) {
     img1 = (
       <Image
         className="responsive-img"
         alt="image1"
         src={image1.image}
-        canvas={canvas1}
+        onLoadHandler={onLoadHandler1}
       />);
   }
   if (image2 && image2.image) {
-    img2 = (<img className="responsive-img" alt="image2" src={image2.image} />);
+    img2 = (
+      <Image
+        className="responsive-img"
+        alt="image2"
+        src={image2.image}
+        onLoadHandler={onLoadHandler2}
+      />);
   }
 
   return (
@@ -59,8 +80,8 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
     this.tabRef = React.createRef();
     this.img1Ref = React.createRef();
     this.img2Ref = React.createRef();
-    this.canvas1 = document.createElement('canvas');
-    this.canvas2 = document.createElement('canvas');
+    this.canvasRef1 = React.createRef();
+    this.canvasRef2 = React.createRef();
     this.canvasdiff = document.createElement('canvas');
   }
 
@@ -92,17 +113,15 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
     });
   }
 
+  onLoadHandler1 = (canvasRef1) => {
+    this.setState({ canvasRef1 });
+  }
+
+  onLoadHandler2 = (canvasRef2) => {
+    this.setState({ canvasRef2 });
+  }
+
   tabRef: any
-
-  img1Ref: any
-
-  img2Ref: any
-
-  canvas1: any
-
-  canvas2: any
-
-  canvasdiff: any
 
   render() {
     return (
@@ -122,7 +141,14 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
                       <li className="tab col s3"><a href="#test4">Test 4</a></li>
                     </ul>
                   </div>
-                  <div id="test1" className="col s12"><SideBySide image1={image1} image2={image2} /></div>
+                  <div id="test1" className="col s12">
+                    <SideBySide
+                      image1={image1}
+                      image2={image2}
+                      onLoadHandler1={this.onLoadHandler1}
+                      onLoadHandler2={this.onLoadHandler2}
+                    />
+                  </div>
                   <div id="test2" className="col s12">Test 2</div>
                   <div id="test3" className="col s12">Test 3</div>
                   <div id="test4" className="col s12">Test 4</div>
