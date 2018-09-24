@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import { Caman } from 'caman';
 
 type ImageProps = { // canvas: HTMLElement,
                     src: string };
@@ -25,7 +24,9 @@ class Image extends React.Component<ImageProps, ImageState> {
     const context = canvas.getContext('2d');
     context.drawImage(img, 0, 0);
     window.ctx = context;
-    console.log('image loaded: ', e, canvas, img);
+    window.cnv = canvas;
+    // window.ctx.getImageData(1, 1, 1, 1);
+    console.log('image loaded: ', context);
   }
 
   onErrorHandler = () => {}
@@ -42,6 +43,7 @@ class Image extends React.Component<ImageProps, ImageState> {
       />,
       <img
         className="responsive-img"
+        crossOrigin="anonymous"
         alt="image1"
         src={src}
         onLoad={this.onLoadHandler}
