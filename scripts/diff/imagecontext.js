@@ -15,6 +15,11 @@ class Pixel {
     this.blue = blue;
     this.alpha = alpha;
   }
+
+  equals = (other: Pixel) => (other.red === this.red
+                              && other.green === this.green
+                              && other.blue === this.blue
+                              && other.alpha === this.alpha)
 }
 
 class ImageContext {
