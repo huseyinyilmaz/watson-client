@@ -10,21 +10,22 @@ import { AppContext } from '../core/context';
 
 import { apis } from '../core/api';
 import { Image } from './image';
+import { ImageDifference } from './difference';
 
 // ==================== Main page props and state ====================
 type DiffPageProps = { image1: string, image2: string };
 
 type DiffPageState = {image1: any,
                       image2: any,
-                      canvasRef1: any,
-                      canvasRef2: any,
+                      context1: any,
+                      context2: any,
                      };
 
 const defaultDiffPageState = {
   image1: undefined,
   image2: undefined,
-  canvasRef1: undefined,
-  canvasRef2: undefined,
+  context1: undefined,
+  context2: undefined,
 };
 
 
@@ -78,11 +79,11 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
   constructor(props) {
     super(props);
     this.tabRef = React.createRef();
-    this.img1Ref = React.createRef();
-    this.img2Ref = React.createRef();
-    this.canvasRef1 = React.createRef();
-    this.canvasRef2 = React.createRef();
-    this.canvasdiff = document.createElement('canvas');
+    // this.img1Ref = React.createRef();
+    // this.img2Ref = React.createRef();
+    // this.canvasRef1 = React.createRef();
+    // this.canvasRef2 = React.createRef();
+    // this.canvasdiff = document.createElement('canvas');
   }
 
   state = defaultDiffPageState
@@ -113,12 +114,12 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
     });
   }
 
-  onLoadHandler1 = (canvasRef1) => {
-    this.setState({ canvasRef1 });
+  onLoadHandler1 = (context1) => {
+    this.setState({ context1 });
   }
 
-  onLoadHandler2 = (canvasRef2) => {
-    this.setState({ canvasRef2 });
+  onLoadHandler2 = (context2) => {
+    this.setState({ context2 });
   }
 
   tabRef: any
@@ -128,20 +129,23 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
       <AppContext.Consumer>
         {
           (context) => {
-            const { image1, image2 } = this.state;
+            const {
+              image1, image2,
+              context1, context2,
+            } = this.state;
             console.log(context);
             return (
               <div>
                 <div className="row">
                   <div className="col s12">
                     <ul className="tabs" ref={this.tabRef}>
-                      <li className="tab col s3"><a className="active" href="#test1">Side by Side</a></li>
-                      <li className="tab col s3"><a href="#test2">Test 2</a></li>
+                      <li className="tab col s3"><a href="#side_by_side">Side by Side</a></li>
+                      <li className="tab col s3"><a href="#image_difference">Image difference</a></li>
                       <li className="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li>
                       <li className="tab col s3"><a href="#test4">Test 4</a></li>
                     </ul>
                   </div>
-                  <div id="test1" className="col s12">
+                  <div id="side_by_side" className="col s12">
                     <SideBySide
                       image1={image1}
                       image2={image2}
@@ -149,7 +153,9 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
                       onLoadHandler2={this.onLoadHandler2}
                     />
                   </div>
-                  <div id="test2" className="col s12">Test 2</div>
+                  <div id="image_difference" className="col s12">
+                    <ImageDifference context1={context1} context2={context2} />
+                  </div>
                   <div id="test3" className="col s12">Test 3</div>
                   <div id="test4" className="col s12">Test 4</div>
                 </div>
