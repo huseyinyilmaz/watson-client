@@ -3,8 +3,8 @@
 import * as React from 'react';
 
 type ImageDifferenceProps = {
-  context1: any,
-  context2: any,
+  canvas1: any,
+  canvas2: any,
   };
 
 type ImageDifferenceState = {};
@@ -16,13 +16,16 @@ class ImageDifference extends React.Component<ImageDifferenceProps, ImageDiffere
   state = defaultImageDifferenceState
 
   render() {
-    const { context1, context2 } = this.props;
-    if (!context1 || !context2) {
+    const { canvas1, canvas2 } = this.props;
+
+    if (!canvas1 || !canvas2) {
       return (<div>Loading</div>);
     } else {
-      console.log(context1);
-      console.log(context2);
-      return (<div>Loaded</div>);
+      const diffCanvas = canvas1.diff(canvas2);
+      const dataURL = diffCanvas.toDataURL();
+      console.log(canvas1);
+      console.log(canvas2);
+      return (<img src={dataURL} alt="difference" />);
     }
   }
 }

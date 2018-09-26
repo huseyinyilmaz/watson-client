@@ -17,15 +17,15 @@ type DiffPageProps = { image1: string, image2: string };
 
 type DiffPageState = {image1: any,
                       image2: any,
-                      context1: any,
-                      context2: any,
+                      canvas1: any,
+                      canvas2: any,
                      };
 
 const defaultDiffPageState = {
   image1: undefined,
   image2: undefined,
-  context1: undefined,
-  context2: undefined,
+  canvas1: undefined,
+  canvas2: undefined,
 };
 
 
@@ -114,12 +114,12 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
     });
   }
 
-  onLoadHandler1 = (context1) => {
-    this.setState({ context1 });
+  onLoadHandler1 = (canvas1) => {
+    this.setState({ canvas1 });
   }
 
-  onLoadHandler2 = (context2) => {
-    this.setState({ context2 });
+  onLoadHandler2 = (canvas2) => {
+    this.setState({ canvas2 });
   }
 
   tabRef: any
@@ -131,7 +131,7 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
           (context) => {
             const {
               image1, image2,
-              context1, context2,
+              canvas1, canvas2,
             } = this.state;
             console.log(context);
             return (
@@ -154,7 +154,7 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
                     />
                   </div>
                   <div id="image_difference" className="col s12">
-                    <ImageDifference context1={context1} context2={context2} />
+                    <ImageDifference canvas1={canvas1} canvas2={canvas2} />
                   </div>
                   <div id="test3" className="col s12">Test 3</div>
                   <div id="test4" className="col s12">Test 4</div>

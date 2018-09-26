@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { ImageContext } from './imagecontext';
+import { Canvas } from './canvas';
 
 type ImageProps = { onLoadHandler: any,
                     src: string };
@@ -22,8 +22,8 @@ class Image extends React.Component<ImageProps, ImageState> {
 
   onLoadHandler = (e: any) => {
     const img = e.currentTarget;
-    const canvas = this.canvasRef.current;
-    const context = new ImageContext(canvas);
+    // const canvas = this.canvasRef.current;
+    const context = new Canvas();
     const { onLoadHandler } = this.props;
     window.img = img;
     context.loadImage(img);
