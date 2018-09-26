@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react';
+import { strictDiff } from './differs/strict';
 
 type ImageDifferenceProps = {
   canvas1: any,
@@ -17,12 +18,10 @@ class ImageDifference extends React.Component<ImageDifferenceProps, ImageDiffere
 
   render() {
     const { canvas1, canvas2 } = this.props;
-
     if (!canvas1 || !canvas2) {
       return (<div>Loading</div>);
     } else {
-      const diffCanvas = canvas1.diff(canvas2);
-      const dataURL = diffCanvas.toDataURL();
+      const dataURL = strictDiff(canvas1, canvas2);
       console.log(canvas1);
       console.log(canvas2);
       return (<img src={dataURL} alt="difference" />);

@@ -22,14 +22,14 @@
     "date-fns": "^1.29.0",
     "file-loader": "^2.0.0",
     "materialize-css": "^1.0.0",
+    "query-string": "^6.1.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-hot-loader": "^4.3.11",
     "react-loadable": "^5.5.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "store": "^2.0.12",
-    "url-loader": "^1.1.1"
+    "store": "^2.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
@@ -60,6 +60,7 @@
     "precss": "^3.1.2",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
+    "url-loader": "^1.1.1",
     "webpack": "^4.19.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8"

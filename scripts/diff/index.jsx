@@ -5,7 +5,7 @@ import * as React from 'react';
 import '../../styles/screenshots.scss';
 
 // import { Link } from 'react-router-dom';
-
+import * as queryString from 'query-string';
 import { AppContext } from '../core/context';
 
 import { apis } from '../core/api';
@@ -173,25 +173,28 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
   }
 }
 
-const DiffPage = ({ match: { params: { image1, image2 } } }: {match: any}) => (
-  <AppContext.Consumer>
-    {
-      (context) => {
-        const { state: { user } } = context;
-        let currentOrganization;
-        if (user) {
-          currentOrganization = user.currentOrganization; // eslint-disable-line prefer-destructuring, max-len
-        } else {
-          currentOrganization = -1;
+const DiffPage = () => {
+  const { img1: image1, img2: image2 } = queryString.parse(window.location.search);
+  return (
+    <AppContext.Consumer>
+      {
+        (context) => {
+          const { state: { user } } = context;
+          let currentOrganization;
+          if (user) {
+            currentOrganization = user.currentOrganization; // eslint-disable-line prefer-destructuring, max-len
+          } else {
+            currentOrganization = -1;
+          }
+          return (
+            <DiffPageInternal
+              organization={currentOrganization}
+              image1={image1}
+              image2={image2}
+            />);
         }
-        return (
-          <DiffPageInternal
-            organization={currentOrganization}
-            image1={image1}
-            image2={image2}
-          />);
       }
-    }
-  </AppContext.Consumer>);
+    </AppContext.Consumer>);
+};
 
 export { DiffPage };

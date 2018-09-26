@@ -1,5 +1,6 @@
 // @flow
 
+// Canvas object that will used to create imageData;
 class Pixel {
   red: number
 
@@ -54,7 +55,7 @@ class Canvas {
     }
   }
 
-  putPixel = (x: number, y: number, pixel: Pixel) => {
+  putPixel = (x: number, y: number, pixel: Pixel): void => {
     const { data } = this;
     const red = y * (this.width * 4) + x * 4;
     data[red] = pixel.red;
@@ -63,7 +64,7 @@ class Canvas {
     data[red + 3] = pixel.alpha;
   }
 
-  loadImage = (img: any) => {
+  loadImage = (img: any): void => {
     this.width = img.naturalWidth;
     this.height = img.naturalHeight;
     this.canvas.width = this.width;
@@ -73,7 +74,7 @@ class Canvas {
     this.data = this.imageData.data;
   }
 
-  reset = (x: number, y: number) => {
+  reset = (x: number, y: number): void => {
     this.width = x;
     this.height = y;
     this.canvas.width = this.width;
@@ -82,32 +83,7 @@ class Canvas {
     this.data = this.imageData.data;
   }
 
-  diff = (other: Canvas) => {
-    const emptyPixel = new Pixel(255, 0, 0, 255);
-    const diffCanvas = new Canvas();
-    const diffCanvasWidth = Math.max(this.width, other.width);
-    const diffCanvasHeight = Math.max(this.height, other.height);
-    diffCanvas.reset(diffCanvasWidth, diffCanvasHeight);
-    for (let x = 0; x < diffCanvas.width; x += 1) {
-      console.log(x);
-      for (let y = 0; y < diffCanvas.height; y += 1) {
-        const p1 = this.getPixel(x, y);
-        const p2 = other.getPixel(x, y);
-        if (p1 && p2 && p1.equals(p2)) {
-          diffCanvas.putPixel(x, y, p1);
-        } else {
-          diffCanvas.putPixel(x, y, emptyPixel);
-        }
-      }
-    }
-    diffCanvas.context.putImageData(
-      diffCanvas.imageData,
-      0, 0,
-    );
-    return diffCanvas;
-  }
-
-  toDataURL = () => this.canvas.toDataURL();
+  toDataURL = (): string => this.canvas.toDataURL();
 }
 
-export { Canvas };
+export { Canvas, Pixel };

@@ -49,7 +49,7 @@ const App = (
         <Route exact path="/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
         <Route exact path="/login" component={LazyLoginPage} />
-        <Route exact path="/diff/:image1/:image2" component={LazyDiffPage} />
+        <Route exact path="/diff" component={LazyDiffPage} />
       </Switch>
     </Base>
   </BrowserRouter>
