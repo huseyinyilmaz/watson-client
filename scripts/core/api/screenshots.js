@@ -21,13 +21,13 @@ class ScreenshotsAPI extends (BaseAPI) {
     ).then(data => data.data);
   }
 
-  screenshotGet = (id: string) => {
-    const fullUrl = `${serverUrl}/screenshots/screenshot/${id}/`;
+  screenshotSnapshotGet = (id: string) => {
+    const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/${id}/`;
     return this.get(fullUrl).then(data => data.data);
   }
 
-  screenshotsGet = (organization: number) => {
-    const fullUrl = `${serverUrl}/screenshots/screenshot/`;
+  screenshotSnapshotsGet = (organization: number) => {
+    const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
     const params = { organization };
     return this.get(fullUrl, { params }).then(data => data.data.results);
   }

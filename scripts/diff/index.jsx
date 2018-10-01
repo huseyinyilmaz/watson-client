@@ -101,7 +101,7 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
   }
 
   getImage = (id: string, callback: (any) => void) => {
-    apis.screenshots.screenshotGet(id).then((data) => {
+    apis.screenshots.screenshotSnapshotGet(id).then((data) => {
       console.log('getImage', id);
       callback(data);
       // this.setState({ screenshot: data });

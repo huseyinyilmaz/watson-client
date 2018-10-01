@@ -41,7 +41,7 @@ class ScreenshotDetailPage
     }
 
     getImage = (id: string) => {
-      apis.screenshots.screenshotGet(id).then((data) => {
+      apis.screenshots.screenshotSnapshotGet(id).then((data) => {
         console.log('getImage', id);
         this.setState({ screenshot: data });
         if (!data.image) {

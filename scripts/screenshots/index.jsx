@@ -45,7 +45,7 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
 
   componentDidMount = () => {
     const { organization } = this.props;
-    apis.screenshots.screenshotsGet(organization).then((data) => {
+    apis.screenshots.screenshotSnapshotsGet(organization).then((data) => {
       this.setState({ screenshots: data });
     });
   }
