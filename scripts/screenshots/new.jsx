@@ -16,8 +16,7 @@ type NewScreenshotPageState =
   {|
    url: string,
    delay: number,
-   dimension: string,
-   browser: string,
+   device: string,
 
    urlError: string,
    generalError: string,
@@ -29,8 +28,7 @@ type NewScreenshotPageState =
 const defaultNewScreenshotState: NewScreenshotPageState = {
   url: '',
   delay: 3,
-  dimension: '',
-  browser: '',
+  device: '',
 
   urlError: '',
   generalError: '',
@@ -54,28 +52,22 @@ class NewScreenshotPageInternal
     this.setState({ delay: value });
   }
 
-  handleDimensionOnChange = (e: any) => {
-    this.setState({ dimension: e.target.value });
-  }
-
-  handleBrowserOnChange = (e: any) => {
-    this.setState({ browser: e.target.value });
+  handleDeviceOnChange = (e: any) => {
+    this.setState({ device: e.target.value });
   }
 
   handleOnSubmit = () => {
     const {
       url,
       delay,
-      dimension,
-      browser,
+      device,
     } = this.state;
     const { organization } = this.props;
 
-    apis.screenshots.screenshotCreate(
+    apis.screenshots.screenshotSnapshotCreate(
       url,
       delay,
-      dimension,
-      browser,
+      device,
       organization,
     ).then((data) => {
       this.setState({ screenshot: data });
@@ -85,8 +77,8 @@ class NewScreenshotPageInternal
         if (e.response && e.response.status) {
           switch (e.response.status) {
             case 400:
-              if (e.response.data.address) {
-                this.setState({ urlError: e.response.data.address });
+              if (e.response.data.url) {
+                this.setState({ urlError: e.response.data.url });
               }
               if (e.response.data.non_field_errors) {
                 this.setState({ generalError: e.response.data.non_field_errors });
@@ -110,38 +102,27 @@ class NewScreenshotPageInternal
       <AppContext.Consumer>
         {
           (context) => {
-            let dims = [(
+            let devs = [(
               <option
                 value=""
                 key="default"
                 disabled
               >
-                Choose your screen dimension
+                Choose choose a device
               </option>)];
-            dims = dims.concat(context.state.constants.dimensions.map(d => (
+            devs = devs.concat(context.state.constants.devices.map(d => (
               <option value={d.code} key={d.code}>{ d.name } ({d.width}X{d.height})</option>
-            )));
-
-            let browsers = [(
-              <option value="" key="default" disabled>
-                Choose your browser
-              </option>
-            )];
-            browsers = browsers.concat(context.state.constants.browsers.map(b => (
-              <option value={b.value} key={b.value}>{b.name}</option>
             )));
 
             const {
               url,
               delay,
-              dimension,
-              browser,
-
+              device,
               urlError,
               generalError,
             } = this.state;
 
-            const isValid = (url && delay && dimension && browser);
+            const isValid = (url && delay && device);
             let submitButtonClass = 'submit-button waves-effect waves-light btn';
 
             if (!isValid) {
@@ -211,25 +192,12 @@ class NewScreenshotPageInternal
                   <div className="row">
                     <div className="input-field col s12">
                       <select
-                        id="dimension"
+                        id="device"
                         className="browser-default"
-                        value={dimension}
-                        onChange={this.handleDimensionOnChange}
+                        value={device}
+                        onChange={this.handleDeviceOnChange}
                       >
-                        { dims }
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <select
-                        id="browser"
-                        className="browser-default"
-                        value={browser}
-                        onChange={this.handleBrowserOnChange}
-                      >
-                        { browsers }
+                        { devs }
                       </select>
                     </div>
                   </div>

@@ -16,6 +16,10 @@ import { LazyLoginPage } from './login/lazy';
 import { LazyDiffPage } from './diff/lazy';
 import { LazyOrganizationsPage } from './organizations/lazy';
 import {
+  LazyProjectsPage,
+  LazyNewProjectPage,
+} from './projects/lazy';
+import {
   LazyScreenshotsPage,
   LazyNewScreenshotPage,
   LazyScreenshotDetailPage,
@@ -44,10 +48,16 @@ const App = (
           path="/"
           component={LazyHomePage}
         />
+
         <Route exact path="/organizations" component={LazyOrganizationsPage} />
+
         <Route exact path="/screenshots" component={LazyScreenshotsPage} />
         <Route exact path="/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
+
+        <Route exact path="/projects" component={LazyProjectsPage} />
+        <Route exact path="/projects/new" component={LazyNewProjectPage} />
+
         <Route exact path="/login" component={LazyLoginPage} />
         <Route exact path="/diff" component={LazyDiffPage} />
       </Switch>

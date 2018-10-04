@@ -4,17 +4,19 @@ import { BaseAPI } from './base';
 import { serverUrl } from '../config/config.json';
 
 class ScreenshotsAPI extends (BaseAPI) {
-  screenshotCreate = (
-    address: string,
+  // ///////////////////////
+  // Screenshot endpoints //
+  // ///////////////////////
+  screenshotSnapshotCreate = (
+    url: string,
     delay: number,
-    dimension: string,
-    browser: string,
+    device: string,
     organization: number,
   ) => {
     const post = {
-      address, delay, dimension, browser, organization,
+      url, delay, device, organization,
     };
-    const fullUrl = `${serverUrl}/screenshots/screenshot/`;
+    const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
     return this.post(
       fullUrl,
       post,
@@ -30,6 +32,30 @@ class ScreenshotsAPI extends (BaseAPI) {
     const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
     const params = { organization };
     return this.get(fullUrl, { params }).then(data => data.data.results);
+  }
+
+  // ////////////////////
+  // Project Endpoints //
+  // ////////////////////
+
+  projectsGet = (organization: number) => {
+    const fullUrl = `${serverUrl}/screenshots/project/`;
+    const params = { organization };
+    return this.get(fullUrl, { params }).then(data => data.data.results);
+  }
+
+  projectCreate = (
+    name: string,
+    organization: number,
+  ) => {
+    const post = {
+      name, organization,
+    };
+    const fullUrl = `${serverUrl}/screenshots/project/`;
+    return this.post(
+      fullUrl,
+      post,
+    ).then(data => data.data);
   }
 }
 

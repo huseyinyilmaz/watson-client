@@ -22,6 +22,7 @@ class Header extends React.Component<HeaderProps> {
     let session;
     let organizationButton;
     let screenshotButton;
+    let projectButton;
 
     if (status === 'initializing') {
       session = (
@@ -46,6 +47,10 @@ class Header extends React.Component<HeaderProps> {
           <Link to="/screenshots">
             Screenshots
           </Link>);
+        projectButton = (
+          <Link to="/projects">
+            Projects
+          </Link>);
       } else {
         session = (
           <Link
@@ -69,6 +74,10 @@ class Header extends React.Component<HeaderProps> {
               <i className="fa fa-bars fa-2x" aria-hidden="true" />
             </a>
             <ul className="right hide-on-med-and-down">
+              <li>
+                { projectButton }
+              </li>
+
               <li>
                 { screenshotButton }
               </li>

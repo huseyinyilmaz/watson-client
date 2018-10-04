@@ -11,25 +11,22 @@ import { AppContext } from '../core/context';
 import { apis } from '../core/api';
 
 
-type ScreenshotsPageProps = { organization: number };
-type ScreenshotPageState = { screenshots: any };
+type ProjectsPageProps = { organization: number };
+type ProjectsPageState = { projects: any };
 
-const defaultScreenshotPageState = {
-  screenshots: undefined,
-};
 
-const Image = ({ screenshot }: {screenshot: any}) => {
-  console.log('screenshot: ', screenshot);
-  const link = `/screenshots/detail/${screenshot.id}`;
+const Image = ({ project }: {project: any}) => {
+  console.log('project: ', project);
+  const link = `/projects/detail/${project.id}`;
   return (
-    <div className="col s12 m4 l3" key={screenshot.id}>
+    <div className="col s12 m4 l3" key={project.id}>
       <div className="card small">
         <div className="card-image">
-          <img src={screenshot.image} alt={screenshot.url} />
+          <img src={project.image} alt={project.name} />
         </div>
         <div className="card-content">
           <p>
-            {screenshot.address}
+            {project.address}
           </p>
         </div>
         <div className="card-action">
@@ -40,13 +37,17 @@ const Image = ({ screenshot }: {screenshot: any}) => {
   );
 };
 
-class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, ScreenshotPageState> {
-  state = defaultScreenshotPageState
+const defaultProjectsPageState = {
+  projects: undefined,
+};
+
+class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPageState> {
+  state = defaultProjectsPageState
 
   componentDidMount = () => {
     const { organization } = this.props;
-    apis.screenshots.screenshotSnapshotsGet(organization).then((data) => {
-      this.setState({ screenshots: data });
+    apis.screenshots.projectsGet(organization).then((data) => {
+      this.setState({ projects: data });
     });
   }
 
@@ -56,11 +57,11 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
         {
           (context) => {
             console.log(context);
-            const { screenshots } = this.state;
-            let screenshotDivs = [];
-            if (screenshots) {
-              screenshotDivs = screenshots.map(s => (
-                <Image screenshot={s} />
+            const { projects } = this.state;
+            let projectDivs = [];
+            if (projects) {
+              projectDivs = projects.map(s => (
+                <Image project={s} />
               ));
             }
             return (
@@ -68,17 +69,17 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
                 <div className="section">
                   <div className="row">
                     <div className="col s12">
-                      Screenshots:
+                      Projects:
                     </div>
                   </div>
                   <div className="row">
-                    { screenshotDivs }
+                    { projectDivs }
                   </div>
 
                   <div className="row">
                     <div className="col s12">
-                      <Link to="/screenshots/new">
-                        Take a new screenshot
+                      <Link to="/projects/new">
+                        Create a new project
                       </Link>
                     </div>
                   </div>
@@ -91,7 +92,7 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
   }
 }
 
-const ScreenshotsPage = () => (
+const ProjectsPage = () => (
   <AppContext.Consumer>
     {
       (context) => {
@@ -102,9 +103,9 @@ const ScreenshotsPage = () => (
         } else {
           currentOrganization = -1;
         }
-        return (<ScreenshotsPageInternal organization={currentOrganization} />);
+        return (<ProjectsPageInternal organization={currentOrganization} />);
       }
     }
   </AppContext.Consumer>);
 
-export { ScreenshotsPage };
+export { ProjectsPage };
