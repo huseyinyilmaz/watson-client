@@ -8,3 +8,18 @@
 #general_error_message {
   color: $error-message;
 }
+
+.header-container {
+  .header-logo {
+    font-size: 30px;
+  }
+  .organization-button {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .project-button {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}

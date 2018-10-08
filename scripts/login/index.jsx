@@ -209,8 +209,8 @@ const LoginPage = () => (
   <AppContext.Consumer>
     {
       (context) => {
-        const { actions: { setToken }, state: { user } } = context;
-        return (<LoginPageInternal user={user} setToken={setToken} />);
+        const { actions: { setToken }, state: { session } } = context;
+        return (<LoginPageInternal user={session && session.user} setToken={setToken} />);
       }
     }
   </AppContext.Consumer>);

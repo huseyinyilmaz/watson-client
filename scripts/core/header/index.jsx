@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { apis } from './api';
+import { apis } from '../api';
+import type { AppStatus } from '../context';
 
-import type { AppStatus } from './context';
+import { OrganizationButton } from './organization';
+import { ProjectButton } from './project';
 
 type HeaderProps = {
   user: any,
@@ -40,16 +42,12 @@ class Header extends React.Component<HeaderProps> {
             Logout
           </button>);
         organizationButton = (
-          <Link to="/organizations">
-            Organizations
-          </Link>);
+          <OrganizationButton />);
+        projectButton = (
+          <ProjectButton />);
         screenshotButton = (
           <Link to="/screenshots">
             Screenshots
-          </Link>);
-        projectButton = (
-          <Link to="/projects">
-            Projects
           </Link>);
       } else {
         session = (
@@ -64,26 +62,29 @@ class Header extends React.Component<HeaderProps> {
     }
 
     return (
-      <div>
+      <div className="header-container">
+        <ul id="project_dropdown" className="dropdown-content">
+          <li><a href="#!">one</a></li>
+          <li><a href="#!">two</a></li>
+          <li className="divider" />
+          <li><a href="#!">three</a></li>
+        </ul>
         <nav>
           <div className="nav-wrapper">
-            <Link to="/" className="brand-logo">
+            <Link to="/" className="header-logo">
               Watson
             </Link>
+            <span className="hide-on-med-and-down">
+              { projectButton }
+              { organizationButton }
+            </span>
+
             <a href="#!" data-target="mobile-menu" className="sidenav-trigger">
               <i className="fa fa-bars fa-2x" aria-hidden="true" />
             </a>
             <ul className="right hide-on-med-and-down">
               <li>
-                { projectButton }
-              </li>
-
-              <li>
                 { screenshotButton }
-              </li>
-
-              <li>
-                { organizationButton }
               </li>
               <li>
                 { session }
@@ -96,11 +97,15 @@ class Header extends React.Component<HeaderProps> {
             { session }
           </li>
           <li>
-            { screenshotButton }
-          </li>
-          <li>
             { organizationButton }
           </li>
+          <li>
+            { projectButton }
+          </li>
+          <li>
+            { screenshotButton }
+          </li>
+
         </ul>
       </div>);
   }

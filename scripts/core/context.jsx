@@ -7,54 +7,33 @@ import { apis } from './api';
 // import type { Apis } from './api';
 import { tokenStore } from './store';
 
+import type { Session, User } from './types';
+
 type AppProviderProps = {
   children: React.Element<any>,
 };
 
 export type AppStatus = 'initializing' | 'initialized';
 
-type User = {
-  id: number,
-  defaultOrganization: number,
-  currentOrganization: number,
-  email: string,
-  emailVerified: boolean,
-  fullName: string,
-  dateJoined: Date,
-}
-
-type Organization = {
-  id: number,
-  company: string,
-  location: string,
-  name: string,
-  slug: string,
-  url: string,
-}
 
 type AppProviderState = {
-  user?: User,
-  organizations: Array<Organization>,
+  session?: Session,
   status: AppStatus,
   constants: any,
   initialization: {
-    context: boolean,
+    session: boolean,
     constants: boolean,
   },
-  constants: any,
 };
 
-const anonUser = undefined;
-
 const defaultAppProviderState: AppProviderState = {
-  user: anonUser,
-  organizations: [],
+  session: undefined,
+  constants: {},
   status: 'initializing',
   initialization: {
-    context: false,
+    session: false,
     constants: false,
   },
-  constants: {},
 };
 
 const AppContext = React.createContext(
@@ -82,14 +61,6 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     this.updateSession();
   }
 
-  setUser(user: any) {
-    this.setState({ user });
-  }
-
-  setOrganizations(organizations: Array<any>) {
-    this.setState({ organizations });
-  }
-
   getToken = tokenStore.get
 
   setToken = (sessionToken: string) => {
@@ -97,12 +68,12 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     this.updateSession();
   }
 
-  setContextInitialized = () => {
+  setSessionInitialized = () => {
     this.setState(prevState => ({
       ...prevState,
       initialization: {
         ...prevState.initialization,
-        context: true,
+        session: true,
       },
     }));
     this.updateStatus();
@@ -131,7 +102,7 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
 
   updateStatus = () => {
     this.setState((prevState) => {
-      if (prevState.initialization.constants && prevState.initialization.context) {
+      if (prevState.initialization.constants && prevState.initialization.session) {
         return {
           ...prevState,
           status: 'initialized',
@@ -154,19 +125,24 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       apis.accounts.sessionGet().then(
         (session) => {
           if (session.logged_in) {
-            const { organizations, user: usr } = session;
+            const { project: prj, organization: org, user: usr } = session;
 
-            const user = {
+            const user: User = {
               id: usr.id,
               defaultOrganization: usr.default_organization,
-              currentOrganization: usr.default_organization,
               email: usr.email,
               emailVerified: usr.email_verified,
               fullName: usr.full_name,
               dateJoined: parse(usr.date_joined),
             };
-            this.setState({ user, organizations });
-            this.setContextInitialized();
+
+            const clientSession: Session = {
+              user,
+              project: prj,
+              organization: org,
+            };
+            this.setState({ session: clientSession });
+            this.setSessionInitialized();
           }
         },
       ).catch(
@@ -176,12 +152,12 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
             console.log('Token is invalid delete the token');
             this.removeToken();
           }
-          this.setContextInitialized();
+          this.setSessionInitialized();
         },
       );
     } else {
-      this.setState({ user: anonUser });
-      this.setContextInitialized();
+      this.setState({ session: undefined });
+      this.setSessionInitialized();
     }
   }
 
@@ -190,8 +166,6 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     const context = {
       state: this.state,
       actions: {
-        setUser: this.setUser,
-        setOrganizations: this.setOrganizations,
         setToken: this.setToken,
         removeToken: this.removeToken,
       },

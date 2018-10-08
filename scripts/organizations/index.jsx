@@ -5,14 +5,20 @@ import * as React from 'react';
 import '../../styles/organizations.scss';
 
 import { AppContext } from '../core/context';
-
+import type { Organization } from '../core/types';
 
 type OrganizationsPageProps = any
 
-class OrganizationsPage extends React.Component<OrganizationsPageProps> {
-  mock() {
-    return this;
-  }
+type OrganizationPageState = {|
+  organizations: Array<Organization>,
+|}
+
+const defaultState = {
+  organizations: [],
+};
+
+class OrganizationsPage extends React.Component<OrganizationsPageProps, OrganizationPageState> {
+  state = defaultState
 
   render() {
     return (

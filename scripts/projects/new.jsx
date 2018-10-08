@@ -35,6 +35,7 @@ class NewProjectPageInternal
   state = defaultNewProjectState
 
   componentDidMount() {
+    console.log('Call component did mount');
     M.updateTextFields();
   }
 
@@ -127,14 +128,14 @@ class NewProjectPageInternal
                   <div className="row">
                     <div className="input-field col s12">
                       <input
-                        id="name"
-                        type="name"
+                        id="name_field"
+                        type="text"
                         className={nameClass}
                         onChange={this.handleNameOnChange}
                         value={name}
                       />
-                      <label htmlFor="name">
-                        Url
+                      <label htmlFor="name_field">
+                        Name
                       </label>
                       { nameErrorMessage }
                     </div>
