@@ -166,10 +166,11 @@ const NewProjectPage = () => (
   <AppContext.Consumer>
     {
       (context) => {
-        const { state: { user } } = context;
+        const { state: { session } } = context;
         let currentOrganization;
-        if (user) {
-          currentOrganization = user.currentOrganization; // eslint-disable-line prefer-destructuring, max-len
+        if (session) {
+          const { organization } = session;
+          currentOrganization = organization.id;
         } else {
           currentOrganization = -1;
         }

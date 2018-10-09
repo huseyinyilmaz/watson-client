@@ -27,6 +27,14 @@ class AccountsAPI extends (BaseAPI) {
     }
     return Promise.reject(new Error('User is not logged in.'));
   }
+
+  // /////////////////////
+  // Organizations apis //
+  // /////////////////////
+  organizationsGet = () => {
+    const fullUrl = `${serverUrl}/accounts/organizations/`;
+    return this.get(fullUrl).then(data => data.data.results);
+  }
 }
 
 export { AccountsAPI };

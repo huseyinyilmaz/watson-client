@@ -15,6 +15,7 @@ import { LazyHomePage } from './home/lazy';
 import { LazyLoginPage } from './login/lazy';
 import { LazyDiffPage } from './diff/lazy';
 import { LazyOrganizationsPage } from './organizations/lazy';
+import { LazyAnonPage } from './anon/lazy';
 import {
   LazyProjectsPage,
   LazyNewProjectPage,
@@ -45,21 +46,27 @@ const App = (
       <Switch>
         <Route
           exact
-          path="/"
+          path="/:organization_slug/:project_slug/"
           component={LazyHomePage}
         />
 
-        <Route exact path="/organizations" component={LazyOrganizationsPage} />
+        <Route exact path="/:organization_slug/:project_slug/organizations" component={LazyOrganizationsPage} />
 
-        <Route exact path="/screenshots" component={LazyScreenshotsPage} />
-        <Route exact path="/screenshots/new" component={LazyNewScreenshotPage} />
-        <Route exact path="/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
+        <Route exact path="/:organization_slug/:project_slug/screenshots" component={LazyScreenshotsPage} />
+        <Route exact path="/:organization_slug/:project_slug/screenshots/new" component={LazyNewScreenshotPage} />
+        <Route exact path="/:organization_slug/:project_slug/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
 
-        <Route exact path="/projects" component={LazyProjectsPage} />
-        <Route exact path="/projects/new" component={LazyNewProjectPage} />
+        <Route exact path="/:organization_slug/:project_slug/projects" component={LazyProjectsPage} />
+        <Route exact path="/:organization_slug/:project_slug/projects/new" component={LazyNewProjectPage} />
 
         <Route exact path="/login" component={LazyLoginPage} />
         <Route exact path="/diff" component={LazyDiffPage} />
+
+        <Route
+          exact
+          path="/"
+          component={LazyAnonPage}
+        />
       </Switch>
     </Base>
   </BrowserRouter>

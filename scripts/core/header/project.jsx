@@ -1,8 +1,11 @@
+// @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-class ProjectButton extends React.Component<HeaderProps> {
-  state = {}
+type ProjectButtonProps = {};
+
+class ProjectButton extends React.Component<ProjectButtonProps> {
+  state = undefined
 
   render() {
     return (

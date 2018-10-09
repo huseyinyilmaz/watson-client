@@ -6,6 +6,7 @@ import type { AppStatus } from '../context';
 
 import { OrganizationButton } from './organization';
 import { ProjectButton } from './project';
+import { DashboardButton } from './dashboard';
 
 type HeaderProps = {
   user: any,
@@ -25,6 +26,7 @@ class Header extends React.Component<HeaderProps> {
     let organizationButton;
     let screenshotButton;
     let projectButton;
+    let dashboardButton;
 
     if (status === 'initializing') {
       session = (
@@ -41,6 +43,8 @@ class Header extends React.Component<HeaderProps> {
           >
             Logout
           </button>);
+        dashboardButton = (
+          <DashboardButton />);
         organizationButton = (
           <OrganizationButton />);
         projectButton = (
@@ -75,6 +79,7 @@ class Header extends React.Component<HeaderProps> {
               Watson
             </Link>
             <span className="hide-on-med-and-down">
+              { dashboardButton }
               { projectButton }
               { organizationButton }
             </span>

@@ -18,6 +18,7 @@ export type Organization = {
   location: string,
   name: string,
   slug: string,
+  email: string,
   url: string,
 }
 
