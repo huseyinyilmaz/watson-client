@@ -14,29 +14,6 @@ import { apis } from '../core/api';
 type ProjectsPageProps = { organization: number };
 type ProjectsPageState = { projects: any };
 
-
-const Image = ({ project }: {project: any}) => {
-  console.log('project: ', project);
-  const link = `/projects/detail/${project.id}`;
-  return (
-    <div className="col s12 m4 l3" key={project.id}>
-      <div className="card small">
-        <div className="card-image">
-          <img src={project.image} alt={project.name} />
-        </div>
-        <div className="card-content">
-          <p>
-            {project.address}
-          </p>
-        </div>
-        <div className="card-action">
-          <Link to={link}>Details</Link>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const defaultProjectsPageState = {
   projects: undefined,
 };
@@ -46,7 +23,7 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
 
   componentDidMount = () => {
     const { organization } = this.props;
-    apis.screenshots.projectsGet(organization).then((data) => {
+    apis.accounts.projectsGet(organization).then((data) => {
       this.setState({ projects: data });
     });
   }
@@ -57,11 +34,38 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
         {
           (context) => {
             console.log(context);
+            const empty = '#';
             const { projects } = this.state;
             let projectDivs = [];
             if (projects) {
-              projectDivs = projects.map(s => (
-                <Image project={s} />
+              projectDivs = projects.map(p => (
+                <div className="card small organization-card" key={p.id}>
+                  <div className="card-content">
+                    <span className="card-title">
+                      {p.name}
+                    </span>
+                    <table className="striped responsive-table organization-table">
+                      <tbody>
+                        <tr>
+                          <th>id</th>
+                          <td>{ p.id }</td>
+                        </tr>
+                        <tr>
+                          <th>name</th>
+                          <td>{ p.name }</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-action">
+                    <a href={empty}>
+                      This is a link
+                    </a>
+                    <a href={empty}>
+                      This is a link
+                    </a>
+                  </div>
+                </div>
               ));
             }
             return (

@@ -40,9 +40,9 @@ const AppContext = React.createContext(
   {
     state: defaultAppProviderState,
     actions: {
-      openLoginDialog: () => undefined,
       setToken: () => undefined,
       removeToken: () => undefined,
+      buildUrl: string => string,
     },
   },
 );

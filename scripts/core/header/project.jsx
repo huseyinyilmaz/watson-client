@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../context';
+import { buildPath } from '../urlutils';
 
 type ProjectButtonProps = {};
 
@@ -9,12 +11,27 @@ class ProjectButton extends React.Component<ProjectButtonProps> {
 
   render() {
     return (
-      <span className="project-button btn">
-        Project:
-        <Link to="/projects">
-          Projects
-        </Link>
-      </span>);
+      <AppContext.Consumer>
+        {
+          (context) => {
+            const { session } = context.state;
+            if (session) {
+              const { project } = session;
+              const fullPath = buildPath(session, '/projects');
+
+              return (
+                <span className="project-button btn">
+                  Project:
+                  <Link to={fullPath}>
+                    { project.name }
+                  </Link>
+                </span>);
+            } else {
+              return null;
+            }
+          }
+        }
+      </AppContext.Consumer>);
   }
 }
 

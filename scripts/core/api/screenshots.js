@@ -33,30 +33,6 @@ class ScreenshotsAPI extends (BaseAPI) {
     const params = { organization };
     return this.get(fullUrl, { params }).then(data => data.data.results);
   }
-
-  // ////////////////////
-  // Project Endpoints //
-  // ////////////////////
-
-  projectsGet = (organization: number) => {
-    const fullUrl = `${serverUrl}/screenshots/project/`;
-    const params = { organization };
-    return this.get(fullUrl, { params }).then(data => data.data.results);
-  }
-
-  projectCreate = (
-    name: string,
-    organization: number,
-  ) => {
-    const post = {
-      name, organization,
-    };
-    const fullUrl = `${serverUrl}/screenshots/project/`;
-    return this.post(
-      fullUrl,
-      post,
-    ).then(data => data.data);
-  }
 }
 
 export { ScreenshotsAPI };
