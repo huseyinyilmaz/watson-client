@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { AppContext } from '../core/context';
 
 import { apis } from '../core/api';
-
+import { getNewProjectsPath } from '../core/urlutils';
 
 type ProjectsPageProps = { organization: number };
 type ProjectsPageState = { projects: any };
@@ -33,63 +33,72 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
       <AppContext.Consumer>
         {
           (context) => {
-            console.log(context);
-            const empty = '#';
+            const { session } = context.state;
             const { projects } = this.state;
+
+            const empty = '#';
             let projectDivs = [];
-            if (projects) {
+            if (session && projects) {
+              const fullPath = getNewProjectsPath(session);
+
               projectDivs = projects.map(p => (
-                <div className="card small organization-card" key={p.id}>
-                  <div className="card-content">
-                    <span className="card-title">
-                      {p.name}
-                    </span>
-                    <table className="striped responsive-table organization-table">
-                      <tbody>
-                        <tr>
-                          <th>id</th>
-                          <td>{ p.id }</td>
-                        </tr>
-                        <tr>
-                          <th>name</th>
-                          <td>{ p.name }</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className="card-action">
-                    <a href={empty}>
-                      This is a link
-                    </a>
-                    <a href={empty}>
-                      This is a link
-                    </a>
+                <div className="col s12 m6 l4">
+                  <div className="card small organization-card" key={p.id}>
+                    <div className="card-content">
+                      <span className="card-title">
+                        {p.name}
+                      </span>
+                      <table className="striped responsive-table organization-table">
+                        <tbody>
+                          <tr>
+                            <th>id</th>
+                            <td>{ p.id }</td>
+                          </tr>
+                          <tr>
+                            <th>name</th>
+                            <td>{ p.name }</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="card-action">
+                      <a href={empty}>
+                        This is a link
+                      </a>
+                      <a href={empty}>
+                        This is a link
+                      </a>
+                    </div>
                   </div>
                 </div>
               ));
+
+              return (
+                <div className="container">
+                  <div className="section">
+                    <div className="row">
+                      <div className="col s12">
+                        Projects:
+                      </div>
+                    </div>
+                    <div className="row">
+                      { projectDivs }
+                    </div>
+
+                    <div className="row">
+                      <div className="col s12">
+                        <Link to={fullPath}>
+                          Create a new project
+                        </Link>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>);
+            } else {
+              // There is no project or there is no session.
+              return undefined;
             }
-            return (
-              <div className="container">
-                <div className="section">
-                  <div className="row">
-                    <div className="col s12">
-                      Projects:
-                    </div>
-                  </div>
-                  <div className="row">
-                    { projectDivs }
-                  </div>
-
-                  <div className="row">
-                    <div className="col s12">
-                      <Link to="/projects/new">
-                        Create a new project
-                      </Link>
-                    </div>
-                  </div>
-
-                </div>
-              </div>);
           }
         }
       </AppContext.Consumer>);
@@ -97,6 +106,7 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
 }
 
 const ProjectsPage = () => (
+
   <AppContext.Consumer>
     {
       (context) => {

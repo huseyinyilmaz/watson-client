@@ -1,13 +1,40 @@
 // @flow
 import type { Session } from './types';
 
-const buildPath = (session: Session, postfix: string) => {
+
+const getOrganizationsPath = () => '/organizations';
+
+const getOrganizationPath = (session: Session) => {
   if (session) {
-    const { organization, project } = session;
-    return `/${organization.slug}/${project.slug}${postfix}`;
+    const { organization } = session;
+    return `/o/${organization.slug}`;
   } else {
     return undefined;
   }
 };
 
-export { buildPath };
+
+const getProjectsPath = (session: Session) => {
+  if (session) {
+    const { organization } = session;
+    return `/o/${organization.slug}/projects`;
+  } else {
+    return undefined;
+  }
+};
+
+const getNewProjectsPath = (session: Session) => {
+  if (session) {
+    const { organization } = session;
+    return `/o/${organization.slug}/projects/new`;
+  } else {
+    return undefined;
+  }
+};
+
+export {
+  getOrganizationsPath,
+  getOrganizationPath,
+  getProjectsPath,
+  getNewProjectsPath,
+};

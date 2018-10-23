@@ -23,3 +23,17 @@ Good design examples
 - dropbox
 - https://screenshotlayer.com/
 - https://urlbox.io/
+
+
+
+
+url mappings
+------------
+
+- / : landing page
+- /dashboard: user dashboard
+- /organizations: organization list page.
+- /o/<organization name>: organization detail page
+- /o/<organization name>/projects: project list page
+- /o/<organization name>/p/<project name>: project detail page.
+- /diff : image difference page

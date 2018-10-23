@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../context';
-import { buildPath } from '../urlutils';
+import { getOrganizationsPath } from '../urlutils';
 
 type HeaderProps = {};
 
@@ -16,15 +16,15 @@ class OrganizationButton extends React.Component<HeaderProps> {
           (context) => {
             const { session } = context.state;
             if (session) {
-              const fullPath = buildPath(session, '/organizations');
+              const fullPath = getOrganizationsPath();
               const { organization } = session;
               return (
-                <span className="organization-button btn">
-                  Organization:
-                  <Link to={fullPath}>
+                <Link to={fullPath}>
+                  <span className="organization-button btn">
+                    Organization:
                     { organization.name }
-                  </Link>
-                </span>);
+                  </span>
+                </Link>);
             } else {
               return null;
             }

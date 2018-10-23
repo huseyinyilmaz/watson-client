@@ -11,7 +11,6 @@ type ProjectDropdownTriggerProps = {}
 declare var M: any;
 
 class ProjectDropdownTrigger extends React.Component<ProjectDropdownTriggerProps> {
-
   constructor(props: ProjectDropdownTriggerProps) {
     super(props);
     this.dropdownRef = React.createRef();

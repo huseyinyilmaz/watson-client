@@ -50,13 +50,13 @@ const App = (
           component={LazyHomePage}
         />
 
-        <Route exact path="/:organization_slug/:project_slug/organizations" component={LazyOrganizationsPage} />
+        <Route exact path="/organizations" component={LazyOrganizationsPage} />
+        <Route exact path="/o/:organization_slug/projects" component={LazyProjectsPage} />
 
         <Route exact path="/:organization_slug/:project_slug/screenshots" component={LazyScreenshotsPage} />
         <Route exact path="/:organization_slug/:project_slug/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/:organization_slug/:project_slug/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
 
-        <Route exact path="/:organization_slug/:project_slug/projects" component={LazyProjectsPage} />
         <Route exact path="/:organization_slug/:project_slug/projects/new" component={LazyNewProjectPage} />
 
         <Route exact path="/login" component={LazyLoginPage} />

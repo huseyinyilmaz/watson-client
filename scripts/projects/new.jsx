@@ -47,7 +47,7 @@ class NewProjectPageInternal
     const { name } = this.state;
     const { organization } = this.props;
 
-    apis.screenshots.projectCreate(
+    apis.accounts.projectCreate(
       name,
       organization,
     ).then((data) => {

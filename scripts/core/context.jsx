@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { parse } from 'date-fns';
+import * as queryString from 'query-string';
 
 import { apis } from './api';
 
@@ -14,7 +15,6 @@ type AppProviderProps = {
 };
 
 export type AppStatus = 'initializing' | 'initialized';
-
 
 type AppProviderState = {
   session?: Session,
@@ -121,8 +121,9 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
   updateSession = () => {
     const sessionToken = tokenStore.get();
     if (sessionToken) {
+      const { o, p } = queryString.parse(window.location.search);
       // get session info
-      apis.accounts.sessionGet().then(
+      apis.accounts.sessionGet(o, p).then(
         (session) => {
           if (session.logged_in) {
             const { project: prj, organization: org, user: usr } = session;

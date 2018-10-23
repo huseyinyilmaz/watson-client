@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../context';
-import { buildPath } from '../urlutils';
+import { getProjectsPath } from '../urlutils';
 
 type ProjectButtonProps = {};
 
@@ -17,15 +17,14 @@ class ProjectButton extends React.Component<ProjectButtonProps> {
             const { session } = context.state;
             if (session) {
               const { project } = session;
-              const fullPath = buildPath(session, '/projects');
-
+              const fullPath = getProjectsPath(session);
               return (
-                <span className="project-button btn">
-                  Project:
-                  <Link to={fullPath}>
+                <Link to={fullPath}>
+                  <span className="project-button btn">
+                    Project:
                     { project.name }
-                  </Link>
-                </span>);
+                  </span>
+                </Link>);
             } else {
               return null;
             }

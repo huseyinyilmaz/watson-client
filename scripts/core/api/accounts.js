@@ -1,6 +1,8 @@
 // @flow
 
 import axios from 'axios';
+import * as queryString from 'query-string';
+
 import { BaseAPI } from './base';
 import { serverUrl } from '../config/config.json';
 
@@ -14,9 +16,21 @@ class AccountsAPI extends (BaseAPI) {
     ).then(data => data.data);
   }
 
-  sessionGet = () => {
+  sessionGet = (organization: ?number, project: ?number) => {
     const fullUrl = `${serverUrl}/accounts/sessions/`;
-    return this.get(fullUrl).then(data => data.data);
+    let p = '';
+    if (organization || project) {
+      const params = {};
+      if (organization) {
+        params.organization = organization;
+      }
+      if (project) {
+        params.project = project;
+      }
+      p = queryString.stringify(params);
+    }
+
+    return this.get(`${fullUrl}?${p}`).then(data => data.data);
   }
 
   sessionDelete = () => {
