@@ -1,4 +1,13 @@
 // @flow
+/*
+ * Url paths.
+ * landingpage:         /
+ * dashboard:           /o/<organization name>
+ * organizations:       /organizations
+ * projects:            /o/<organization name>/projects
+ * project detail page: /o/<organization name>/p/<project name>
+ * diff:                /diff
+ */
 import type { Session } from './types';
 
 

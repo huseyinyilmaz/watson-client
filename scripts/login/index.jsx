@@ -3,8 +3,6 @@
 import * as React from 'react';
 import { Redirect } from 'react-router';
 
-// import { Modal } from 'materialize-css/dist/js/materialize';
-
 import { apis } from '../core/api';
 import { AppContext } from '../core/context';
 

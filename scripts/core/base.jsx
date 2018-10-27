@@ -15,7 +15,6 @@ const Base = (props: BaseProps) => (
         (context) => {
           let { children } = props;
           if (context.state.status !== 'initialized') {
-            console.log('XXXXXXXXXXXXXXXXXXXXX PreLoader');
             children = <PreLoader />;
           }
           return (

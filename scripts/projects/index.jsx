@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import '../../styles/screenshots.scss';
+import '../../styles/projects.scss';
 
 import { Link } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ import { AppContext } from '../core/context';
 
 import { apis } from '../core/api';
 import { getNewProjectsPath } from '../core/urlutils';
+import { ProjectCard } from './projectcard';
 
 type ProjectsPageProps = { organization: number };
 type ProjectsPageState = { projects: any };
@@ -28,6 +29,10 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
     });
   }
 
+  selectHandler = () => {
+    console.log('selected');
+  }
+
   render() {
     return (
       <AppContext.Consumer>
@@ -35,46 +40,17 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
           (context) => {
             const { session } = context.state;
             const { projects } = this.state;
-
-            const empty = '#';
             let projectDivs = [];
             if (session && projects) {
+              const { project } = session;
               const fullPath = getNewProjectsPath(session);
-
-              projectDivs = projects.map(p => (
-                <div className="col s12 m6 l4">
-                  <div className="card small organization-card" key={p.id}>
-                    <div className="card-content">
-                      <span className="card-title">
-                        {p.name}
-                      </span>
-                      <table className="striped responsive-table organization-table">
-                        <tbody>
-                          <tr>
-                            <th>id</th>
-                            <td>{ p.id }</td>
-                          </tr>
-                          <tr>
-                            <th>name</th>
-                            <td>{ p.name }</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="card-action">
-                      <a href={empty}>
-                        This is a link
-                      </a>
-                      <a href={empty}>
-                        This is a link
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ));
+              projectDivs = projects.map((p) => {
+                const isSelected = (project.id === p.id);
+                return (<ProjectCard isSelected={isSelected} project={p} key={p.id} />);
+              });
 
               return (
-                <div className="container">
+                <div className="container projects-container">
                   <div className="section">
                     <div className="row">
                       <div className="col s12">

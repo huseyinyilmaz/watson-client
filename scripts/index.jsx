@@ -4,9 +4,10 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { Route, Switch } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import * as M from 'materialize-css';
 import { Base } from './core/base';
+import { history } from './core/history';
 // import { LoginPage } from './login';
 // import { HomePage } from './home';
 import './core/materialize';
@@ -41,7 +42,7 @@ const getRoot = () => {
 };
 
 const App = (
-  <BrowserRouter>
+  <Router history={history}>
     <Base>
       <Switch>
         <Route
@@ -69,7 +70,7 @@ const App = (
         />
       </Switch>
     </Base>
-  </BrowserRouter>
+  </Router>
 );
 
 ReactDOM.render(
