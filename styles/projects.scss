@@ -1,0 +1,12 @@
+@import './base.scss';
+
+.projects-container {
+  .project-card {
+    &.selected {
+      background-color: #eee;
+    }
+    &:hover {
+      background-color:#ddd
+    }
+  }
+}
