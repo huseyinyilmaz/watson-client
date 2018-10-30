@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { AppContext } from '../core/context';
 
 import { apis } from '../core/api';
-import { getNewProjectsPath } from '../core/urlutils';
+import { getNewProjectPath } from '../core/urlutils';
 import { ProjectCard } from './projectcard';
 
 type ProjectsPageProps = { organization: number };
@@ -29,24 +29,27 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
     });
   }
 
-  selectHandler = () => {
-    console.log('selected');
-  }
-
   render() {
     return (
       <AppContext.Consumer>
         {
           (context) => {
             const { session } = context.state;
+            const { updateSession } = context.actions;
             const { projects } = this.state;
             let projectDivs = [];
             if (session && projects) {
               const { project } = session;
-              const fullPath = getNewProjectsPath(session);
+              const fullPath = getNewProjectPath(session);
               projectDivs = projects.map((p) => {
                 const isSelected = (project.id === p.id);
-                return (<ProjectCard isSelected={isSelected} project={p} key={p.id} />);
+                return (
+                  <ProjectCard
+                    updateSession={updateSession}
+                    isSelected={isSelected}
+                    project={p}
+                    key={p.id}
+                  />);
               });
 
               return (

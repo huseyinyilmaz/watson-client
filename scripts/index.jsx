@@ -47,7 +47,7 @@ const App = (
       <Switch>
         <Route
           exact
-          path="/:organization_slug/:project_slug/"
+          path="/o/:organization_slug/p/:project_slug/"
           component={LazyHomePage}
         />
 
@@ -58,7 +58,7 @@ const App = (
         <Route exact path="/:organization_slug/:project_slug/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/:organization_slug/:project_slug/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
 
-        <Route exact path="/:organization_slug/:project_slug/projects/new" component={LazyNewProjectPage} />
+        <Route exact path="/:organization_slug/projects/new" component={LazyNewProjectPage} />
 
         <Route exact path="/login" component={LazyLoginPage} />
         <Route exact path="/diff" component={LazyDiffPage} />

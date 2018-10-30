@@ -4,14 +4,18 @@ import type { Project } from '../core/types';
 
 const empty = '#';
 
-type ProjectCardProps = {|
-  isSelected: boolean,
-  project: Project,
+type ProjectCardProps =
+  {|
+   isSelected: boolean,
+   project: Project,
+   updateSession: (?number) => void,
 |};
 
 class ProjectCard extends React.Component<ProjectCardProps> {
-  selectHandler = () => {
-    console.log('OK');
+  selectHandler = (e: SyntheticEvent<HTMLElement>) => {
+    e.preventDefault();
+    const { updateSession, project } = this.props;
+    updateSession(project.id);
   }
 
   render() {

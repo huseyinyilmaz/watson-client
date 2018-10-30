@@ -12,12 +12,12 @@ class BaseAPI {
 
   getToken = tokenStore.get
 
-  getAuthHeaders = (): ?{} => {
+  getAuthHeaders = (): {} => {
     const token = this.getToken();
     if (token) {
       return { Authorization: `TOKEN ${token}` };
     } else {
-      return null;
+      return {};
     }
   }
 

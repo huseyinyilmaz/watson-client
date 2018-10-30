@@ -16,20 +16,12 @@ class AccountsAPI extends (BaseAPI) {
     ).then(data => data.data);
   }
 
-  sessionGet = (organization: ?number, project: ?number) => {
+  sessionGet = (project: ?number) => {
     const fullUrl = `${serverUrl}/accounts/sessions/`;
     let p = '';
-    if (organization || project) {
-      const params = {};
-      if (organization) {
-        params.organization = organization;
-      }
-      if (project) {
-        params.project = project;
-      }
-      p = queryString.stringify(params);
+    if (project) {
+      p = queryString.stringify({ project });
     }
-
     return this.get(`${fullUrl}?${p}`).then(data => data.data);
   }
 

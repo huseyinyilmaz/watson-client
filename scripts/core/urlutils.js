@@ -22,28 +22,26 @@ const getOrganizationPath = (session: Session) => {
   }
 };
 
-
-const getProjectsPath = (session: Session) => {
-  if (session) {
-    const { organization } = session;
-    return `/o/${organization.slug}/projects`;
-  } else {
-    return undefined;
-  }
+const getProjectPath = (session: Session): string => {
+  const { organization, project } = session;
+  return `/o/${organization.slug}/p/${project.slug}`;
 };
 
-const getNewProjectsPath = (session: Session) => {
-  if (session) {
-    const { organization } = session;
-    return `/o/${organization.slug}/projects/new`;
-  } else {
-    return undefined;
-  }
+
+const getProjectsPath = (session: Session) => {
+  const { organization } = session;
+  return `/o/${organization.slug}/projects`;
+};
+
+const getNewProjectPath = (session: Session): string => {
+  const { organization } = session;
+  return `/o/${organization.slug}/projects/new`;
 };
 
 export {
   getOrganizationsPath,
   getOrganizationPath,
   getProjectsPath,
-  getNewProjectsPath,
+  getProjectPath,
+  getNewProjectPath,
 };

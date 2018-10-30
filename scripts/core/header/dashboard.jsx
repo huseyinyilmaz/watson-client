@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../context';
-import { getOrganizationPath } from '../urlutils';
+import { getProjectPath } from '../urlutils';
 
 type DashboardButtonProps = {};
 
@@ -16,7 +16,7 @@ class DashboardButton extends React.Component<DashboardButtonProps> {
           (context) => {
             const { session } = context.state;
             if (session) {
-              const fullPath = getOrganizationPath(session);
+              const fullPath = getProjectPath(session);
               return (
                 <Link to={fullPath} className="dashboard-button btn">
                   Dashboard

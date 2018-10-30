@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { parse } from 'date-fns';
-import * as queryString from 'query-string';
+// import * as queryString from 'query-string';
 
 import { apis } from './api';
 
@@ -43,6 +43,7 @@ const AppContext = React.createContext(
       setToken: () => undefined,
       removeToken: () => undefined,
       buildUrl: string => string,
+      updateSession: () => undefined,
     },
   },
 );
@@ -118,12 +119,12 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     this.updateSession();
   }
 
-  updateSession = () => {
+  updateSession = (projectId: ?number) => {
     const sessionToken = tokenStore.get();
     if (sessionToken) {
-      const { o, p } = queryString.parse(window.location.search);
+      // const { o, p } = queryString.parse(window.location.search);
       // get session info
-      apis.accounts.sessionGet(o, p).then(
+      apis.accounts.sessionGet(projectId).then(
         (session) => {
           if (session.logged_in) {
             const { project: prj, organization: org, user: usr } = session;
@@ -167,6 +168,7 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     const context = {
       state: this.state,
       actions: {
+        updateSession: this.updateSession,
         setToken: this.setToken,
         removeToken: this.removeToken,
       },
