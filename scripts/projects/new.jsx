@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 
 import '../../styles/projects-new.scss';
 import { apis } from '../core/api';
+import { getProjectsPath } from '../core/urlutils';
 
 import { AppContext } from '../core/context';
 
@@ -74,15 +75,17 @@ class NewProjectPageInternal
   }
 
   render() {
-    const { project } = this.state;
-    if (project) {
-      const fullUrl = `/projects/detail/${project.id}`;
-      return (<Redirect to={fullUrl} />);
-    }
     return (
       <AppContext.Consumer>
         {
           (context) => {
+            const { project } = this.state;
+            const { session } = context.state;
+            if (session && project) {
+              const fullUrl = getProjectsPath(session);
+              return (<Redirect to={fullUrl} />);
+            }
+
             console.log(context);
             const {
               name,

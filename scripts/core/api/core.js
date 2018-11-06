@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { BaseAPI } from './base';
 import { serverUrl } from '../config/config.json';

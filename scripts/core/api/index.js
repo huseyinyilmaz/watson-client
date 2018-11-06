@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { AccountsAPI } from './accounts';
 import { CoreAPI } from './core';

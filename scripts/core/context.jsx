@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { parse } from 'date-fns';
 // import * as queryString from 'query-string';
 
 import { apis } from './api';
@@ -8,7 +7,7 @@ import { apis } from './api';
 // import type { Apis } from './api';
 import { tokenStore } from './store';
 
-import type { Session, User } from './types';
+import type { Session } from './types';
 
 type AppProviderProps = {
   children: React.Element<any>,
@@ -126,24 +125,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       // get session info
       apis.accounts.sessionGet(projectId).then(
         (session) => {
-          if (session.logged_in) {
-            const { project: prj, organization: org, user: usr } = session;
-
-            const user: User = {
-              id: usr.id,
-              defaultOrganization: usr.default_organization,
-              email: usr.email,
-              emailVerified: usr.email_verified,
-              fullName: usr.full_name,
-              dateJoined: parse(usr.date_joined),
-            };
-
-            const clientSession: Session = {
-              user,
-              project: prj,
-              organization: org,
-            };
-            this.setState({ session: clientSession });
+          if (session.loggedIn) {
+            this.setState({ session });
             this.setSessionInitialized();
           }
         },

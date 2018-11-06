@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 import '@babel/polyfill';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
@@ -14,6 +14,7 @@ import './core/materialize';
 // import { AppProvider } from './core/context';
 import { LazyHomePage } from './home/lazy';
 import { LazyLoginPage } from './login/lazy';
+import { LazySignupPage } from './signup/lazy';
 import { LazyDiffPage } from './diff/lazy';
 import { LazyOrganizationsPage } from './organizations/lazy';
 import { LazyAnonPage } from './anon/lazy';
@@ -58,9 +59,10 @@ const App = (
         <Route exact path="/:organization_slug/:project_slug/screenshots/new" component={LazyNewScreenshotPage} />
         <Route exact path="/:organization_slug/:project_slug/screenshots/detail/:id" component={LazyScreenshotDetailPage} />
 
-        <Route exact path="/:organization_slug/projects/new" component={LazyNewProjectPage} />
+        <Route exact path="/o/:organization_slug/projects/new" component={LazyNewProjectPage} />
 
         <Route exact path="/login" component={LazyLoginPage} />
+        <Route exact path="/signup" component={LazySignupPage} />
         <Route exact path="/diff" component={LazyDiffPage} />
 
         <Route

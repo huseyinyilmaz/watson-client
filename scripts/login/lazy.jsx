@@ -1,3 +1,4 @@
+// @flow strict
 import Loadable from 'react-loadable';
 
 import { Loading } from '../core/loading';

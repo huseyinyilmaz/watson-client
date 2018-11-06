@@ -1,10 +1,15 @@
-// @flow
+// @flow strict
 
 import axios from 'axios';
 import * as queryString from 'query-string';
 
 import { BaseAPI } from './base';
 import { serverUrl } from '../config/config.json';
+import { normalizeAPISession } from './utils';
+import type {
+  Session,
+  SignupInput,
+} from '../types';
 
 class AccountsAPI extends (BaseAPI) {
   sessionCreate = (email: string, password: string) => {
@@ -16,13 +21,13 @@ class AccountsAPI extends (BaseAPI) {
     ).then(data => data.data);
   }
 
-  sessionGet = (project: ?number) => {
+  sessionGet = (project: ?number): Promise<Session> => {
     const fullUrl = `${serverUrl}/accounts/sessions/`;
     let p = '';
     if (project) {
       p = queryString.stringify({ project });
     }
-    return this.get(`${fullUrl}?${p}`).then(data => data.data);
+    return this.get(`${fullUrl}?${p}`).then(data => normalizeAPISession(data.data));
   }
 
   sessionDelete = () => {
@@ -65,6 +70,21 @@ class AccountsAPI extends (BaseAPI) {
       fullUrl,
       post,
     ).then(data => data.data);
+  }
+
+  projectDelete = (project: number) => {
+    const fullUrl = `${serverUrl}/accounts/projects/${project}`;
+    console.log('deleteing');
+    return this.delete(fullUrl).then(data => data).catch(ex => ex.response.data);
+  }
+
+  // ///////////////////
+  // Signup Endpoints //
+  // ///////////////////
+
+  signup = (data: SignupInput) => {
+    const fullUrl = `${serverUrl}/accounts/signup/`;
+    return this.post(fullUrl, data);
   }
 }
 

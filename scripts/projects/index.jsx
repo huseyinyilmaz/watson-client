@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import * as React from 'react';
 
@@ -22,11 +22,16 @@ const defaultProjectsPageState = {
 class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPageState> {
   state = defaultProjectsPageState
 
-  componentDidMount = () => {
+  updateProjectList = () => {
+    this.setState({ projects: undefined });
     const { organization } = this.props;
     apis.accounts.projectsGet(organization).then((data) => {
       this.setState({ projects: data });
     });
+  }
+
+  componentDidMount = () => {
+    this.updateProjectList();
   }
 
   render() {
@@ -46,6 +51,7 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
                 return (
                   <ProjectCard
                     updateSession={updateSession}
+                    updateProjectList={this.updateProjectList}
                     isSelected={isSelected}
                     project={p}
                     key={p.id}
@@ -57,21 +63,14 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
                   <div className="section">
                     <div className="row">
                       <div className="col s12">
-                        Projects:
-                      </div>
-                    </div>
-                    <div className="row">
-                      { projectDivs }
-                    </div>
-
-                    <div className="row">
-                      <div className="col s12">
                         <Link to={fullPath}>
                           Create a new project
                         </Link>
                       </div>
                     </div>
-
+                    <div className="row">
+                      { projectDivs }
+                    </div>
                   </div>
                 </div>);
             } else {

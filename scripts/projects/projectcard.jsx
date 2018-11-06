@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { Project } from '../core/types';
+import { apis } from '../core/api';
 
 const empty = '#';
 
@@ -9,6 +10,7 @@ type ProjectCardProps =
    isSelected: boolean,
    project: Project,
    updateSession: (?number) => void,
+   updateProjectList: () => void,
 |};
 
 class ProjectCard extends React.Component<ProjectCardProps> {
@@ -16,6 +18,14 @@ class ProjectCard extends React.Component<ProjectCardProps> {
     e.preventDefault();
     const { updateSession, project } = this.props;
     updateSession(project.id);
+  }
+
+  deleteHandler = (e: SyntheticEvent<HTMLElement>) => {
+    const { project, updateProjectList } = this.props;
+    e.preventDefault();
+    apis.accounts.projectDelete(project.id)
+      .then(updateProjectList)
+      .catch((ex) => { console.log('ex', ex); debugger; });
   }
 
   render() {
@@ -50,6 +60,9 @@ class ProjectCard extends React.Component<ProjectCardProps> {
           <div className="card-action">
             <a href={empty} onClick={this.selectHandler}>
               Select
+            </a>
+            <a href={empty} onClick={this.deleteHandler}>
+              Delete
             </a>
             <a href={empty}>
               This is a link
