@@ -60,59 +60,72 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
       name, email, password, organizationCompany, organizationLocation, organizationCompanyUrl,
     } = values;
     const data = {
-      name,
-      email,
-      password,
-      organization_company: organizationCompany,
-      organization_location: organizationLocation,
-      organization_company_url: organizationCompanyUrl,
+      user: { full_name: name, email, password },
+      organization: {
+        company: organizationCompany,
+        location: organizationLocation,
+        company_url: organizationCompanyUrl,
+      },
     };
-    apis.accounts.signup(data).catch((e) => {
-      // make sure status code matches
-      const {
-        name: nameErrors,
-        email: emailErrors,
-        password: passwordErrors,
-        organization_company: organizationCompanyErrors,
-        organization_location: organizationLocationErrors,
-        organization_company_url: organizationCompanyUrlErrors,
-      } = e.response.data;
-      const errors = {};
+    apis.accounts.signup(data)
+      .then((d) => {
+        console.log(d);
+      })
+      .catch((e) => {
+        // make sure status code matches
+        const {
+          user: userErrors,
+          organization: organizationErrors,
+        } = e.response.data;
+        const errors = {};
 
-      if (nameErrors && nameErrors.length > 0) {
-        const [error] = nameErrors;
-        errors.name = error;
-      }
+        if (userErrors) {
+          const {
+            full_name: nameErrors,
+            email: emailErrors,
+            password: passwordErrors,
+          } = userErrors;
 
-      if (emailErrors && emailErrors.length > 0) {
-        const [error] = emailErrors;
-        errors.email = error;
-      }
+          if (nameErrors && nameErrors.length > 0) {
+            const [error] = nameErrors;
+            errors.name = error;
+          }
 
-      if (passwordErrors && passwordErrors.length > 0) {
-        const [error] = passwordErrors;
-        errors.password = error;
-      }
+          if (emailErrors && emailErrors.length > 0) {
+            const [error] = emailErrors;
+            errors.email = error;
+          }
 
-      if (organizationCompanyErrors && organizationCompanyErrors.length > 0) {
-        const [error] = organizationCompanyErrors;
-        errors.organizationCompany = error;
-      }
+          if (passwordErrors && passwordErrors.length > 0) {
+            const [error] = passwordErrors;
+            errors.password = error;
+          }
+        }
 
-      if (organizationLocationErrors && organizationLocationErrors.length > 0) {
-        const [error] = organizationLocationErrors;
-        errors.organizationLocation = error;
-      }
+        if (organizationErrors) {
+          const {
+            company: organizationCompanyErrors,
+            location: organizationLocationErrors,
+            company_url: organizationCompanyUrlErrors,
+          } = organizationErrors;
 
-      if (organizationCompanyUrlErrors && organizationCompanyUrlErrors.length > 0) {
-        const [error] = organizationCompanyUrlErrors;
-        errors.organizationCompanyUrl = error;
-      }
+          if (organizationCompanyErrors && organizationCompanyErrors.length > 0) {
+            const [error] = organizationCompanyErrors;
+            errors.organizationCompany = error;
+          }
 
-      setErrors(errors);
+          if (organizationLocationErrors && organizationLocationErrors.length > 0) {
+            const [error] = organizationLocationErrors;
+            errors.organizationLocation = error;
+          }
 
-      console.log(e);
-    }).finally(() => setSubmitting(false));
+          if (organizationCompanyUrlErrors && organizationCompanyUrlErrors.length > 0) {
+            const [error] = organizationCompanyUrlErrors;
+            errors.organizationCompanyUrl = error;
+          }
+        }
+        setErrors(errors);
+      }).finally(() => setSubmitting(false));
 
     // console.log('Signin up:', name, email, password, company, location, companyUrl);
   }

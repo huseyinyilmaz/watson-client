@@ -53,11 +53,22 @@ export type Session =
    project: Project,
    |}
 
-export type SignupInput = {|
-  name: string,
-  email: string,
-  password: string,
-  organization_company: string,
-  organization_location: string,
-  organization_company_url: string,
-|}
+type SignupUser =
+  {|
+   full_name: string,
+   email: string,
+   password: string,
+   |};
+
+type SignupOrganization =
+  {|
+   company: string,
+   location: string,
+   company_url: string,
+   |};
+
+export type Signup =
+  {|
+   user: SignupUser,
+   organization: SignupOrganization,
+   |};

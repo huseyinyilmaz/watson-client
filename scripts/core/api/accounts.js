@@ -8,7 +8,7 @@ import { serverUrl } from '../config/config.json';
 import { normalizeAPISession } from './utils';
 import type {
   Session,
-  SignupInput,
+  Signup,
 } from '../types';
 
 class AccountsAPI extends (BaseAPI) {
@@ -82,7 +82,7 @@ class AccountsAPI extends (BaseAPI) {
   // Signup Endpoints //
   // ///////////////////
 
-  signup = (data: SignupInput) => {
+  signup = (data: Signup) => {
     const fullUrl = `${serverUrl}/accounts/signup/`;
     return this.post(fullUrl, data);
   }
