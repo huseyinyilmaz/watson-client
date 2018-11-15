@@ -18,23 +18,24 @@ type SignupPageState = {|
 
 type SignupPageProps = {||}
 
-const defaultState = {
+const defaultState: SignupPageState = {
   user: undefined,
   generalError: undefined,
 };
 
-class SignupPageInternal extends React.Component<SignupPageProps, SignupPageState> {
-  state = defaultState;
+const initialValues = {
+  name: '',
+  email: '',
+  password: '',
+  password2: '',
+  organizationCompany: '',
+  organizationLocation: '',
+  organizationCompanyUrl: '',
+};
 
-  initialValues = {
-    name: '',
-    email: '',
-    password: '',
-    password2: '',
-    organizationCompany: '',
-    organizationLocation: '',
-    organizationCompanyUrl: '',
-  }
+
+class SignupPageInternal extends React.Component<SignupPageProps, SignupPageState> {
+  state = defaultState
 
   schema = yup.object().shape({
     name: yup.string().required('Required'),
@@ -152,7 +153,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
           <div className="row">
             <div className="col offset-s3 s6">
               <Formik
-                initialValues={this.initialValues}
+                initialValues={initialValues}
                 validationSchema={this.schema}
                 onSubmit={this.onSubmitHandler}
               >

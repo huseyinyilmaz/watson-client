@@ -25,7 +25,8 @@ class AccountsAPI extends (BaseAPI) {
     const fullUrl = `${serverUrl}/accounts/sessions/`;
     let p = '';
     if (project) {
-      p = queryString.stringify({ project });
+      const projectStr = project.toString();
+      p = queryString.stringify({ project: projectStr });
     }
     return this.get(`${fullUrl}?${p}`).then(data => normalizeAPISession(data.data));
   }

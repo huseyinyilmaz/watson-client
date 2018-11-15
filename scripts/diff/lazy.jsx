@@ -1,9 +1,9 @@
-// import * as React from 'react';
+// @flow strict
 import Loadable from 'react-loadable';
 
 import { Loading } from '../core/loading';
 
-const LazyDiffPage = Loadable(
+const LazyDiffPage: any = Loadable(
   {
     loader: () => (import('./index').then(({ DiffPage }) => (DiffPage))),
     loading: Loading,

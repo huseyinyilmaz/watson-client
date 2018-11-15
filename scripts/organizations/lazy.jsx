@@ -4,7 +4,7 @@ import Loadable from 'react-loadable';
 
 import { Loading } from '../core/loading';
 
-const LazyOrganizationsPage = Loadable(
+const LazyOrganizationsPage: any = Loadable(
   {
     loader: () => (import('./index').then(({ OrganizationsPage }) => (OrganizationsPage))),
     loading: Loading,

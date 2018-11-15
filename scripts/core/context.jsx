@@ -35,17 +35,27 @@ const defaultAppProviderState: AppProviderState = {
   },
 };
 
-const AppContext = React.createContext(
-  {
-    state: defaultAppProviderState,
-    actions: {
-      setToken: () => undefined,
-      removeToken: () => undefined,
-      buildUrl: string => string,
-      updateSession: () => undefined,
-    },
+type AppProviderContext = {
+  state: AppProviderState,
+  actions: {
+    setToken: (string) => void,
+    removeToken: () => void,
+    // buildUrl: string => string,
+    updateSession: () => void,
   },
-);
+}
+
+const defaultAppProviderContext: AppProviderContext = {
+  state: defaultAppProviderState,
+  actions: {
+    setToken: _ => undefined,
+    removeToken: () => undefined,
+    // buildUrl: string => string,
+    updateSession: () => undefined,
+  },
+};
+
+const AppContext = React.createContext<AppProviderContext>(defaultAppProviderContext);
 
 class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
   // constructor(props: AppProviderProps) {

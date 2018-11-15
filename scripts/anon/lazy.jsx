@@ -1,9 +1,9 @@
-// import * as React from 'react';
+// @flow strict
 import Loadable from 'react-loadable';
 
 import { Loading } from '../core/loading';
 
-const LazyAnonPage = Loadable(
+const LazyAnonPage: any = Loadable(
   {
     loader: () => (import('./index').then(({ AnonPage }) => (AnonPage))),
     loading: Loading,

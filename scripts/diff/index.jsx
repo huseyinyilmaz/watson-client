@@ -187,12 +187,16 @@ const DiffPage = () => {
           } else {
             currentOrganization = -1;
           }
-          return (
-            <DiffPageInternal
-              organization={currentOrganization}
-              image1={image1}
-              image2={image2}
-            />);
+          if (image1 && image2 && image1.length && image2.length) {
+            return (
+              <DiffPageInternal
+                organization={currentOrganization}
+                image1={image1[0]}
+                image2={image2[0]}
+              />);
+          } else {
+            return (<div>img1 and img2 url parameters has to be provided.</div>);
+          }
         }
       }
     </AppContext.Consumer>);

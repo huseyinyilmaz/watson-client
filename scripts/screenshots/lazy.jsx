@@ -1,24 +1,23 @@
 // @flow strict
-// import * as React from 'react';
 import Loadable from 'react-loadable';
 
 import { Loading } from '../core/loading';
 
-const LazyScreenshotsPage = Loadable(
+const LazyScreenshotsPage: any = Loadable(
   {
     loader: () => (import('./index').then(({ ScreenshotsPage }) => (ScreenshotsPage))),
     loading: Loading,
   },
 );
 
-const LazyNewScreenshotPage = Loadable(
+const LazyNewScreenshotPage: any = Loadable(
   {
     loader: () => (import('./new').then(({ NewScreenshotPage }) => (NewScreenshotPage))),
     loading: Loading,
   },
 );
 
-const LazyScreenshotDetailPage = Loadable(
+const LazyScreenshotDetailPage: any = Loadable(
   {
     loader: () => (import('./detail').then(({ ScreenshotDetailPage }) => (ScreenshotDetailPage))),
     loading: Loading,

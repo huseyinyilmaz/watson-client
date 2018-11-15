@@ -3,7 +3,7 @@ import Loadable from 'react-loadable';
 
 import { Loading } from '../core/loading';
 
-const LazyLoginPage = Loadable(
+const LazyLoginPage: any = Loadable(
   {
     loader: () => (import('./index').then(({ LoginPage }) => (LoginPage))),
     loading: Loading,
