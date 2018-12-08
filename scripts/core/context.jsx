@@ -137,7 +137,12 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       apis.accounts.sessionGet(projectId === undefined ? clientSession.projectId : projectId).then(
         (session) => {
           this.setState({ session });
-          this.setSessionInitialized();
+          sessionStore.set({
+            token: session.key,
+            organizationId: session.organization.id,
+            projectId: session.project.id,
+            userId: session.user.id,
+          });
         },
       ).catch(
         (e) => {
@@ -146,13 +151,12 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
             console.log('Token is invalid delete the token');
             this.removeClientSession();
           }
-          this.setSessionInitialized();
         },
       );
     } else {
       this.setState({ session: undefined });
-      this.setSessionInitialized();
     }
+    this.setSessionInitialized();
   }
 
   render() {
