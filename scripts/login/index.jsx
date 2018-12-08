@@ -8,6 +8,8 @@ import { AppContext } from '../core/context';
 
 import '../../styles/login.scss';
 
+import type { ClientSession } from '../core/types';
+
 type LoginPageState = {
   username: string,
   password: string,
@@ -19,7 +21,7 @@ type LoginPageState = {
 
 type LoginPageProps = {
   user: any,
-  setToken: (string) => void,
+  setClientSession: ClientSession => void,
 }
 
 const defaultState = {
@@ -47,10 +49,17 @@ class LoginPageInternal extends React.Component<LoginPageProps, LoginPageState> 
   loginHandler = () => {
     this.setState({ disabled: true });
     const { username, password } = this.state;
-    const { setToken } = this.props;
+    const { setClientSession } = this.props;
     const resp = apis.accounts.sessionCreate(username, password);
-    resp.then(({ token }) => {
-      setToken(token);
+    resp.then(({
+      key, user, project, organization,
+    }) => {
+      setClientSession({
+        token: key,
+        userId: user.id,
+        projectId: project.id,
+        organizationId: organization.id,
+      });
     }).catch((e) => {
       if (e.response && e.response.status) {
         switch (e.response.status) {
@@ -207,8 +216,12 @@ const LoginPage = () => (
   <AppContext.Consumer>
     {
       (context) => {
-        const { actions: { setToken }, state: { session } } = context;
-        return (<LoginPageInternal user={session && session.user} setToken={setToken} />);
+        const { actions: { setClientSession }, state: { session } } = context;
+        return (
+          <LoginPageInternal
+            user={session && session.user}
+            setClientSession={setClientSession}
+          />);
       }
     }
   </AppContext.Consumer>);

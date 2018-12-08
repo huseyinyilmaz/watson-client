@@ -1,13 +1,16 @@
 // @flow
-import * as React from 'react';
-// import * as queryString from 'query-string';
 
+
+import * as React from 'react';
+
+import { sessionStore } from './store';
 import { apis } from './api';
 
-// import type { Apis } from './api';
-import { tokenStore } from './store';
 
-import type { Session } from './types';
+import type {
+  Session,
+  ClientSession,
+} from './types';
 
 type AppProviderProps = {
   children: React.Element<any>,
@@ -38,8 +41,8 @@ const defaultAppProviderState: AppProviderState = {
 type AppProviderContext = {
   state: AppProviderState,
   actions: {
-    setToken: (string) => void,
-    removeToken: () => void,
+    setClientSession: (ClientSession) => void,
+    removeClientSession: () => void,
     // buildUrl: string => string,
     updateSession: () => void,
   },
@@ -48,8 +51,8 @@ type AppProviderContext = {
 const defaultAppProviderContext: AppProviderContext = {
   state: defaultAppProviderState,
   actions: {
-    setToken: _ => undefined,
-    removeToken: () => undefined,
+    setClientSession: _ => undefined,
+    removeClientSession: () => undefined,
     // buildUrl: string => string,
     updateSession: () => undefined,
   },
@@ -71,10 +74,10 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     this.updateSession();
   }
 
-  getToken = tokenStore.get
+  getClientSession = sessionStore.get
 
-  setToken = (sessionToken: string) => {
-    tokenStore.set(sessionToken);
+  setClientSession = (session: ClientSession) => {
+    sessionStore.set(session);
     this.updateSession();
   }
 
@@ -123,17 +126,17 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     });
   }
 
-  removeToken = () => {
-    tokenStore.remove();
+  removeClientSession = () => {
+    sessionStore.remove();
     this.updateSession();
   }
 
   updateSession = (projectId: ?number) => {
-    const sessionToken = tokenStore.get();
-    if (sessionToken) {
+    const clientSession = this.getClientSession();
+    if (clientSession) {
       // const { o, p } = queryString.parse(window.location.search);
       // get session info
-      apis.accounts.sessionGet(projectId).then(
+      apis.accounts.sessionGet(projectId === undefined ? clientSession.projectId : projectId).then(
         (session) => {
           if (session.loggedIn) {
             this.setState({ session });
@@ -145,7 +148,7 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
           console.log('Error', e);
           if (e.response.status === 403) {
             console.log('Token is invalid delete the token');
-            this.removeToken();
+            this.removeClientSession();
           }
           this.setSessionInitialized();
         },
@@ -162,8 +165,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       state: this.state,
       actions: {
         updateSession: this.updateSession,
-        setToken: this.setToken,
-        removeToken: this.removeToken,
+        setClientSession: this.setClientSession,
+        removeClientSession: this.removeClientSession,
       },
     };
     const { children } = this.props;

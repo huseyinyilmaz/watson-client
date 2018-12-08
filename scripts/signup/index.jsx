@@ -1,18 +1,20 @@
 // @flow strict
 
 import * as React from 'react';
-import { Redirect } from 'react-router';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import { apis } from '../core/api';
 import { AppContext } from '../core/context';
 import { InputField } from './inputfield';
+import { Result } from './result';
 
 import '../../styles/login.scss';
 
+import type { SignupUser } from '../core/types';
+
 type SignupPageState = {|
-  user: any,
+  user: ?SignupUser,
   generalError: ?string,
 |}
 
@@ -52,6 +54,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
 
 
   onSubmitHandler = (values, state) => {
+    this.setState({ generalError: undefined });
     const {
       setSubmitting,
       setErrors,
@@ -70,69 +73,74 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
     };
     apis.accounts.signup(data)
       .then((d) => {
-        console.log(d);
+        if (d.status === 201) {
+          this.setState({ user: data.user });
+        } else {
+          this.setState({ generalError: 'There was an error with your request. Please try again in a few seconds.' });
+          console.log(d);
+        }
       })
       .catch((e) => {
-        // make sure status code matches
-        const {
-          user: userErrors,
-          organization: organizationErrors,
-        } = e.response.data;
-        const errors = {};
-
-        if (userErrors) {
+        if (e && e.response && e.response.status === 400) {
+          // make sure status code matches
           const {
-            full_name: nameErrors,
-            email: emailErrors,
-            password: passwordErrors,
-          } = userErrors;
+            user: userErrors,
+            organization: organizationErrors,
+          } = e.response.data;
+          const errors = {};
 
-          if (nameErrors && nameErrors.length > 0) {
-            const [error] = nameErrors;
-            errors.name = error;
+          if (userErrors) {
+            const {
+              full_name: nameErrors,
+              email: emailErrors,
+              password: passwordErrors,
+            } = userErrors;
+
+            if (nameErrors && nameErrors.length > 0) {
+              const [error] = nameErrors;
+              errors.name = error;
+            }
+
+            if (emailErrors && emailErrors.length > 0) {
+              const [error] = emailErrors;
+              errors.email = error;
+            }
+
+            if (passwordErrors && passwordErrors.length > 0) {
+              const [error] = passwordErrors;
+              errors.password = error;
+            }
           }
 
-          if (emailErrors && emailErrors.length > 0) {
-            const [error] = emailErrors;
-            errors.email = error;
-          }
+          if (organizationErrors) {
+            const {
+              company: organizationCompanyErrors,
+              location: organizationLocationErrors,
+              company_url: organizationCompanyUrlErrors,
+            } = organizationErrors;
 
-          if (passwordErrors && passwordErrors.length > 0) {
-            const [error] = passwordErrors;
-            errors.password = error;
+            if (organizationCompanyErrors && organizationCompanyErrors.length > 0) {
+              const [error] = organizationCompanyErrors;
+              errors.organizationCompany = error;
+            }
+
+            if (organizationLocationErrors && organizationLocationErrors.length > 0) {
+              const [error] = organizationLocationErrors;
+              errors.organizationLocation = error;
+            }
+
+            if (organizationCompanyUrlErrors && organizationCompanyUrlErrors.length > 0) {
+              const [error] = organizationCompanyUrlErrors;
+              errors.organizationCompanyUrl = error;
+            }
           }
+          setErrors(errors);
+        } else {
+          this.setState({ generalError: 'There was an error with your request. Please try again in a few seconds.' });
         }
-
-        if (organizationErrors) {
-          const {
-            company: organizationCompanyErrors,
-            location: organizationLocationErrors,
-            company_url: organizationCompanyUrlErrors,
-          } = organizationErrors;
-
-          if (organizationCompanyErrors && organizationCompanyErrors.length > 0) {
-            const [error] = organizationCompanyErrors;
-            errors.organizationCompany = error;
-          }
-
-          if (organizationLocationErrors && organizationLocationErrors.length > 0) {
-            const [error] = organizationLocationErrors;
-            errors.organizationLocation = error;
-          }
-
-          if (organizationCompanyUrlErrors && organizationCompanyUrlErrors.length > 0) {
-            const [error] = organizationCompanyUrlErrors;
-            errors.organizationCompanyUrl = error;
-          }
-        }
-        setErrors(errors);
       }).finally(() => setSubmitting(false));
 
     // console.log('Signin up:', name, email, password, company, location, companyUrl);
-  }
-
-  removeErrors = () => {
-    this.setState({ generalError: undefined });
   }
 
   render() {
@@ -140,11 +148,10 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
       user,
       generalError,
     } = this.state;
-
     // If we have a user that means we are already logged in
     // redirect to home page.
     if (user) {
-      return (<Redirect to="/" />);
+      return (<Result user={user} />);
     }
 
     return (

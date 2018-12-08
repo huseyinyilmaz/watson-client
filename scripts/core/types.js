@@ -53,14 +53,24 @@ export type Session =
    project: Project,
    |}
 
-type SignupUser =
+// If you change this type bump version number in the session store
+// This is the data we stroe in session store.
+export type ClientSession =
+  {|
+   token: string,
+   userId: number,
+   projectId: number,
+   organizationId: number,
+   |}
+
+export type SignupUser =
   {|
    full_name: string,
    email: string,
    password: string,
    |};
 
-type SignupOrganization =
+export type SignupOrganization =
   {|
    company: string,
    location: string,

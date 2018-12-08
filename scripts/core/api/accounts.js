@@ -28,12 +28,20 @@ class AccountsAPI extends (BaseAPI) {
       const projectStr = project.toString();
       p = queryString.stringify({ project: projectStr });
     }
-    return this.get(`${fullUrl}?${p}`).then(data => normalizeAPISession(data.data));
+    // return this.get(`${fullUrl}?${p}`).then(data => normalizeAPISession(data.data.results[0]));
+    return this.get(`${fullUrl}?${p}`).then(
+      (data) => {
+        const result = normalizeAPISession(data.data.results[0]);
+        // debugger;
+        return result;
+      },
+    );
   }
 
   sessionDelete = () => {
-    const sessionToken = this.getToken();
-    if (sessionToken) {
+    const session = this.getSession();
+    if (session) {
+      const { token: sessionToken } = session;
       const fullUrl = `${serverUrl}/accounts/sessions/${sessionToken}/`;
       return this.delete(fullUrl).then(data => data.data);
     }

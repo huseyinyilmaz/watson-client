@@ -11,13 +11,13 @@ import { DashboardButton } from './dashboard';
 type HeaderProps = {
   user: any,
   status: AppStatus,
-  removeToken: () => void,
+  removeClientSession: () => void,
 };
 
 class Header extends React.Component<HeaderProps> {
   logoutHandler = () => {
-    const { removeToken } = this.props;
-    apis.accounts.sessionDelete().then(removeToken);
+    const { removeClientSession } = this.props;
+    apis.accounts.sessionDelete().then(removeClientSession);
   }
 
   render() {
@@ -55,12 +55,20 @@ class Header extends React.Component<HeaderProps> {
           </Link>);
       } else {
         session = (
-          <Link
-            to="/login"
-            className="waves-effect waves-light btn"
-          >
-            Login
-          </Link>
+          <React.Fragment>
+            <Link
+              to="/login"
+              className="waves-effect waves-light btn"
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="waves-effect waves-light btn"
+            >
+              Signup
+            </Link>
+          </React.Fragment>
         );
       }
     }

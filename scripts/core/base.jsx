@@ -22,7 +22,7 @@ const Base = (props: BaseProps) => (
               <Header
                 user={context.state.session && context.state.session.user}
                 status={context.state.status}
-                removeToken={context.actions.removeToken}
+                removeClientSession={context.actions.removeClientSession}
               />
               { children }
             </React.Fragment>

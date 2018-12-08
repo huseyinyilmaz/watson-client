@@ -3,18 +3,19 @@
 import axios from 'axios';
 
 import type { EnvironmentConfig } from '../config/types';
-import { tokenStore } from '../store';
+import { sessionStore } from '../store';
 
 class BaseAPI {
   serverUrl: string
 
   environment: EnvironmentConfig
 
-  getToken = tokenStore.get
+  getSession = sessionStore.get
 
   getAuthHeaders = (): {} => {
-    const token = this.getToken();
-    if (token) {
+    const session = this.getSession();
+    if (session) {
+      const { token } = session;
       return { Authorization: `TOKEN ${token}` };
     } else {
       return {};

@@ -1,5 +1,5 @@
 // @flow
-
+// Inspired from this: https://github.com/react-materialize/react-materialize/blob/master/src/Modal.js
 import * as React from 'react';
 
 declare var M: any;
