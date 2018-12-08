@@ -1,6 +1,4 @@
-// @flow
-
-
+// @flow strict
 import * as React from 'react';
 
 import { sessionStore } from './store';
@@ -138,10 +136,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       // get session info
       apis.accounts.sessionGet(projectId === undefined ? clientSession.projectId : projectId).then(
         (session) => {
-          if (session.loggedIn) {
-            this.setState({ session });
-            this.setSessionInitialized();
-          }
+          this.setState({ session });
+          this.setSessionInitialized();
         },
       ).catch(
         (e) => {

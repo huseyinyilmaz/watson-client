@@ -39,7 +39,7 @@ export type Project = {|
 
 export type APISession =
   {|
-   logged_in: boolean,
+   key: string,
    user: APIUser,
    organization: Organization,
    project: Project,
@@ -47,7 +47,7 @@ export type APISession =
 
 export type Session =
   {|
-   loggedIn: boolean,
+   key: string,
    user: User,
    organization: Organization,
    project: Project,

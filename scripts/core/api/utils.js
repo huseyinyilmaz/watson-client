@@ -30,14 +30,14 @@ const normalizeAPIUser = (apiUser: APIUser): User => {
 
 const normalizeAPISession = (apiSession: APISession): Session => {
   const {
-    logged_in: loggedIn,
+    key,
     user: apiUser,
     organization,
     project,
   } = apiSession;
 
   return {
-    loggedIn,
+    key,
     user: normalizeAPIUser(apiUser),
     organization,
     project,
