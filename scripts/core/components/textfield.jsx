@@ -4,7 +4,7 @@ import * as React from 'react';
 
 type EventHandler = (e: SyntheticEvent<HTMLInputElement>) => void;
 
-type InputProps =
+type TextFieldProps =
   {|
     id: string,
     type: string,
@@ -16,9 +16,9 @@ type InputProps =
     touched: boolean,
    |};
 
-const InputField = ({
+const TextField = ({
   id, type, display, value, onChange, onBlur, error, touched,
-}: InputProps) => (
+}: TextFieldProps) => (
   <div className="input-field">
     <input
       id={id}
@@ -32,4 +32,4 @@ const InputField = ({
     {error && touched && <span className="helper-text error" data-error={error} />}
   </div>);
 
-export { InputField };
+export { TextField };

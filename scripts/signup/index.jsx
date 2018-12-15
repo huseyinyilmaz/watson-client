@@ -6,7 +6,7 @@ import * as yup from 'yup';
 
 import { apis } from '../core/api';
 import { AppContext } from '../core/context';
-import { InputField } from './inputfield';
+import { TextField } from '../core/components/textfield';
 import { Result } from './result';
 
 import '../../styles/login.scss';
@@ -185,7 +185,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                           Signup Form
                         </div>
                         <form>
-                          <InputField
+                          <TextField
                             id="name"
                             type="text"
                             display="Full Name"
@@ -195,7 +195,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                             error={errors.name}
                             touched={touched.name}
                           />
-                          <InputField
+                          <TextField
                             id="email"
                             type="text"
                             display="Email"
@@ -205,7 +205,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                             error={errors.email}
                             touched={touched.email}
                           />
-                          <InputField
+                          <TextField
                             id="password"
                             type="password"
                             display="Password"
@@ -215,7 +215,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                             error={errors.password}
                             touched={touched.password}
                           />
-                          <InputField
+                          <TextField
                             id="password2"
                             type="password"
                             display="Repeat Password"
@@ -225,7 +225,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                             error={errors.password2}
                             touched={touched.password2}
                           />
-                          <InputField
+                          <TextField
                             id="organizationCompany"
                             type="text"
                             display="Company"
@@ -235,7 +235,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                             error={errors.organizationCompany}
                             touched={touched.organizationCompany}
                           />
-                          <InputField
+                          <TextField
                             id="organizationLocation"
                             type="text"
                             display="Location"
@@ -245,7 +245,7 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
                             error={errors.organizationLocation}
                             touched={touched.organizationLocation}
                           />
-                          <InputField
+                          <TextField
                             id="organizationCompanyUrl"
                             type="text"
                             display="Company Url"

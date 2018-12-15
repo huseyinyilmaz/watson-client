@@ -1,6 +1,8 @@
 // @flow strict
 
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { AppContext } from '../core/context';
 
 import '../../styles/organizations.scss';
 
@@ -8,6 +10,9 @@ import type { Organization } from '../core/types';
 
 import { apis } from '../core/api';
 import { PreLoader } from '../core/loading';
+import { getNewOrganizationPath } from '../core/urlutils';
+
+import { OrganizationCard } from './organizationcard';
 
 type OrganizationsPageProps = any
 
@@ -23,72 +28,63 @@ class OrganizationsPage extends React.Component<OrganizationsPageProps, Organiza
   state = defaultState
 
   componentDidMount = () => {
+    this.updateOrganizationList();
+  }
+
+  updateOrganizationList =() => {
+    this.setState({ organizations: undefined });
     apis.accounts.organizationsGet().then((data) => {
       this.setState({ organizations: data });
     });
   }
 
   render() {
-    const { organizations } = this.state;
-    const empty = '#';
+    return (
+      <AppContext.Consumer>
+        {
+          (context) => {
+            const { session } = context.state;
+            const { updateSessionByOrganization } = context.actions;
 
-    if (organizations === undefined || organizations === null) {
-      return (<PreLoader />);
-    } else {
-      const orgs = organizations.map(
-        o => (
-          <div className="card small organization-card" key={o.id}>
-            <div className="card-content">
-              <span className="card-title">
-                {o.name}
-              </span>
-              <table className="striped responsive-table organization-table">
-                <tbody>
-                  <tr>
-                    <th>id</th>
-                    <td>{ o.id }</td>
-                  </tr>
-                  <tr>
-                    <th>Company</th>
-                    <td>{ o.company }</td>
-                  </tr>
-                  <tr>
-                    <th>Location</th>
-                    <td>{ o.location }</td>
-                  </tr>
-                  <tr>
-                    <th>Email</th>
-                    <td>{ o.email }</td>
-                  </tr>
-                  <tr>
-                    <th>URL</th>
-                    <td>{ o.url }</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="card-action">
-              <a href={empty}>
-                This is a link
-              </a>
-              <a href={empty}>
-                This is a link
-              </a>
-            </div>
-          </div>
-        ),
-      );
-      return (
-        <div className="container">
-          <div className="section">
-            <div className="row">
-              <div className="col s12 m6 l4">
-                { orgs }
-              </div>
-            </div>
-          </div>
-        </div>);
-    }
+            const { organizations } = this.state;
+
+            if (!session || !organizations) {
+              return (<PreLoader />);
+            } else {
+              const { organization } = session;
+              const fullPath = getNewOrganizationPath();
+              const organizationDivs = organizations.map((o) => {
+                const isSelected = (organization.id === o.id);
+                return (
+                  <OrganizationCard
+                    updateSessionByOrganization={updateSessionByOrganization}
+                    updateOrganizationList={this.updateOrganizationList}
+                    isSelected={isSelected}
+                    organization={o}
+                    key={o.id}
+                  />);
+              });
+
+              return (
+                <div className="container organizations-container">
+                  <div className="section">
+                    <div className="row">
+                      <div className="col s12">
+                        <Link to={fullPath}>
+                          Create a new project
+                        </Link>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      { organizationDivs }
+                    </div>
+                  </div>
+                </div>);
+            }
+          }
+        }
+      </AppContext.Consumer>);
   }
 }
 

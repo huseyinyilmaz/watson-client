@@ -43,6 +43,8 @@ type AppProviderContext = {
     removeClientSession: () => void,
     // buildUrl: string => string,
     updateSession: () => void,
+    updateSessionByProject: (number) => void,
+    updateSessionByOrganization: (number) => void,
   },
 }
 
@@ -53,6 +55,8 @@ const defaultAppProviderContext: AppProviderContext = {
     removeClientSession: () => undefined,
     // buildUrl: string => string,
     updateSession: () => undefined,
+    updateSessionByProject: (_: number) => undefined,
+    updateSessionByOrganization: (_: number) => undefined,
   },
 };
 
@@ -129,30 +133,52 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
     this.updateSession();
   }
 
-  updateSession = (projectId: ?number) => {
+  processSession = (session: Session) => {
+    this.setState({ session });
+    sessionStore.set({
+      token: session.key,
+      organizationId: session.organization.id,
+      projectId: session.project.id,
+      userId: session.user.id,
+    });
+  }
+
+  handleProcessSessionError = (e: *) => {
+    console.log('Error', e);
+    if (e.response.status === 403) {
+      console.log('Token is invalid delete the token');
+      this.removeClientSession();
+    }
+  }
+
+  updateSessionByProject = (projectId: number) => {
     const clientSession = this.getClientSession();
     if (clientSession) {
-      // const { o, p } = queryString.parse(window.location.search);
-      // get session info
-      apis.accounts.sessionGet(projectId === undefined ? clientSession.projectId : projectId).then(
-        (session) => {
-          this.setState({ session });
-          sessionStore.set({
-            token: session.key,
-            organizationId: session.organization.id,
-            projectId: session.project.id,
-            userId: session.user.id,
-          });
-        },
-      ).catch(
-        (e) => {
-          console.log('Error', e);
-          if (e.response.status === 403) {
-            console.log('Token is invalid delete the token');
-            this.removeClientSession();
-          }
-        },
-      );
+      apis.accounts.sessionGetByProject(projectId)
+        .then(this.processSession)
+        .catch(this.handleProcessSessionError);
+    } else {
+      this.setState({ session: undefined });
+    }
+    this.setSessionInitialized();
+  }
+
+  updateSessionByOrganization = (organizationId: number) => {
+    const clientSession = this.getClientSession();
+    if (clientSession) {
+      apis.accounts.sessionGetByOrganization(organizationId)
+        .then(this.processSession)
+        .catch(this.handleProcessSessionError);
+    } else {
+      this.setState({ session: undefined });
+    }
+    this.setSessionInitialized();
+  }
+
+  updateSession = () => {
+    const clientSession = this.getClientSession();
+    if (clientSession) {
+      apis.accounts.sessionGet().then(this.processSession).catch(this.handleProcessSessionError);
     } else {
       this.setState({ session: undefined });
     }
@@ -165,6 +191,8 @@ class AppProvider extends React.Component<AppProviderProps, AppProviderState> {
       state: this.state,
       actions: {
         updateSession: this.updateSession,
+        updateSessionByProject: this.updateSessionByProject,
+        updateSessionByOrganization: this.updateSessionByOrganization,
         setClientSession: this.setClientSession,
         removeClientSession: this.removeClientSession,
       },

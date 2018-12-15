@@ -3,37 +3,50 @@
 import * as React from 'react';
 import { Redirect } from 'react-router';
 
-import '../../styles/projects-new.scss';
+import '../../styles/organizations-new.scss';
 import { apis } from '../core/api';
-import { getProjectsPath } from '../core/urlutils';
+import { getOrganizationsPath } from '../core/urlutils';
 
 import { AppContext } from '../core/context';
 
 declare var M: any;
 
-type NewProjectPageProps = { organization: number };
+type NewOrganizationPageProps = {};
 
-type NewProjectPageState =
+type NewOrganizationPageState =
   {|
    name: string,
+   company: string,
+   location: string,
+   email: string,
+   url: string,
    nameError: string,
+   companyError: string,
+   locationError: string,
+   emailError: string,
+   urlError: string,
    generalError: string,
-
-   project: any,
-
+   organization: any,
    |}
 
-const defaultNewProjectState: NewProjectPageState = {
+const defaultNewOrganizationState: NewOrganizationPageState = {
   name: '',
-
+  company: '',
+  location: '',
+  email: '',
+  url: '',
   nameError: '',
+  companyError: '',
+  locationError: '',
+  emailError: '',
+  urlError: '',
   generalError: '',
-  project: undefined,
+  organization: undefined,
 };
 
-class NewProjectPageInternal
-  extends React.Component<NewProjectPageProps, NewProjectPageState> {
-  state = defaultNewProjectState
+class NewOrganizationPage
+  extends React.Component<NewOrganizationPageProps, NewOrganizationPageState> {
+  state = defaultNewOrganizationState
 
   componentDidMount() {
     console.log('Call component did mount');
@@ -45,14 +58,22 @@ class NewProjectPageInternal
   }
 
   handleOnSubmit = () => {
-    const { name } = this.state;
-    const { organization } = this.props;
-
-    apis.accounts.projectCreate(
+    const {
       name,
-      organization,
+      company,
+      location,
+      email,
+      url,
+    } = this.state;
+
+    apis.accounts.organizationCreate(
+      name,
+      company,
+      location,
+      email,
+      url,
     ).then((data) => {
-      this.setState({ project: data });
+      this.setState({ organization: data });
     })
       .catch((e) => {
         window.thisError = e;
@@ -79,10 +100,10 @@ class NewProjectPageInternal
       <AppContext.Consumer>
         {
           (context) => {
-            const { project } = this.state;
+            const { organization } = this.state;
             const { session } = context.state;
-            if (session && project) {
-              const fullUrl = getProjectsPath(session);
+            if (session && organization) {
+              const fullUrl = getOrganizationsPath();
               return (<Redirect to={fullUrl} />);
             }
 
@@ -120,11 +141,11 @@ class NewProjectPageInternal
 
 
             return (
-              <div className="container new-project-container">
+              <div className="container new-organization-container">
                 <div className="section">
                   <div className="row">
                     <div className="col s12">
-                      Create a new project.
+                      Create a new organization.
                     </div>
                   </div>
 
@@ -151,7 +172,7 @@ class NewProjectPageInternal
                         className={submitButtonClass}
                         onClick={this.handleOnSubmit}
                       >
-                        Create a Project
+                        Create a Organization
                         <i className="fas fa-chevron-right" />
                       </button>
                     </div>
@@ -165,21 +186,4 @@ class NewProjectPageInternal
   }
 }
 
-const NewProjectPage = () => (
-  <AppContext.Consumer>
-    {
-      (context) => {
-        const { state: { session } } = context;
-        let currentOrganization;
-        if (session) {
-          const { organization } = session;
-          currentOrganization = organization.id;
-        } else {
-          currentOrganization = -1;
-        }
-        return (<NewProjectPageInternal organization={currentOrganization} />);
-      }
-    }
-  </AppContext.Consumer>);
-
-export { NewProjectPage };
+export { NewOrganizationPage };

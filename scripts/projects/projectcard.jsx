@@ -1,7 +1,8 @@
-// @flow
+// @flow strict
 import * as React from 'react';
 import type { Project } from '../core/types';
 import { apis } from '../core/api';
+import { DeleteProjectModal } from './projectcarddeletemodal';
 
 const empty = '#';
 
@@ -9,27 +10,49 @@ type ProjectCardProps =
   {|
    isSelected: boolean,
    project: Project,
-   updateSession: (?number) => void,
+   updateSessionByProject: (number) => void,
    updateProjectList: () => void,
 |};
 
-class ProjectCard extends React.Component<ProjectCardProps> {
+type ProjectCardState =
+  {|
+   deleteModalOpen: boolean,
+   |};
+
+const defaultProjectCardState: ProjectCardState = {
+  deleteModalOpen: false,
+};
+
+
+class ProjectCard extends React.Component<ProjectCardProps, ProjectCardState> {
+  state = defaultProjectCardState
+
   selectHandler = (e: SyntheticEvent<HTMLElement>) => {
     e.preventDefault();
-    const { updateSession, project } = this.props;
-    updateSession(project.id);
+    const { updateSessionByProject, project } = this.props;
+    updateSessionByProject(project.id);
   }
 
   deleteHandler = (e: SyntheticEvent<HTMLElement>) => {
-    const { project, updateProjectList } = this.props;
     e.preventDefault();
+    this.setState({ deleteModalOpen: true });
+  }
+
+  deleteProject = () => {
+    // XXX do not delete default or selected project.
+    const { updateProjectList, project } = this.props;
     apis.accounts.projectDelete(project.id)
       .then(updateProjectList)
       .catch((ex) => { console.log('ex', ex); debugger; });
   }
 
+  cancelDelete = () => {
+    this.setState({ deleteModalOpen: false });
+  }
+
   render() {
     const { isSelected, project } = this.props;
+    const { deleteModalOpen } = this.state;
     let selectedCss;
     if (isSelected) {
       selectedCss = 'card small project-card selected';
@@ -64,9 +87,13 @@ class ProjectCard extends React.Component<ProjectCardProps> {
             <a href={empty} onClick={this.deleteHandler}>
               Delete
             </a>
-            <a href={empty}>
-              This is a link
-            </a>
+            { deleteModalOpen
+           && (
+             <DeleteProjectModal
+               project={project}
+               onDeleteHandler={this.deleteProject}
+               onCancelHandler={this.cancelDelete}
+             />)}
           </div>
         </div>
       </div>);

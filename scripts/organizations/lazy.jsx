@@ -11,4 +11,11 @@ const LazyOrganizationsPage: any = Loadable(
   },
 );
 
-export { LazyOrganizationsPage };
+const LazyNewOrganizationPage: any = Loadable(
+  {
+    loader: () => (import('./new').then(({ NewOrganizationPage }) => (NewOrganizationPage))),
+    loading: Loading,
+  },
+);
+
+export { LazyOrganizationsPage, LazyNewOrganizationPage };

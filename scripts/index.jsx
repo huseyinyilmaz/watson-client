@@ -16,8 +16,11 @@ import { LazyHomePage } from './home/lazy';
 import { LazyLoginPage } from './login/lazy';
 import { LazySignupPage } from './signup/lazy';
 import { LazyDiffPage } from './diff/lazy';
-import { LazyOrganizationsPage } from './organizations/lazy';
 import { LazyAnonPage } from './anon/lazy';
+import {
+  LazyOrganizationsPage,
+  LazyNewOrganizationPage,
+} from './organizations/lazy';
 import {
   LazyProjectsPage,
   LazyNewProjectPage,
@@ -53,6 +56,7 @@ const App = (
         />
 
         <Route exact path="/organizations" component={LazyOrganizationsPage} />
+        <Route exact path="/organizations/new" component={LazyNewOrganizationPage} />
         <Route exact path="/o/:organization_slug/projects" component={LazyProjectsPage} />
 
         <Route exact path="/:organization_slug/:project_slug/screenshots" component={LazyScreenshotsPage} />

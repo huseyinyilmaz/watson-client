@@ -31,7 +31,8 @@ class Modal extends React.Component<ModalProps, ModalState> {
   }
 
   componentDidMount() {
-    this.instance = M.Modal.init(this.modalRef.current, {});
+    const options = { dismissible: false };
+    this.instance = M.Modal.init(this.modalRef.current, options);
     this.instance.open();
   }
 

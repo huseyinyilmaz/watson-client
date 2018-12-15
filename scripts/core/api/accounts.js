@@ -3,9 +3,12 @@
 import axios from 'axios';
 import * as queryString from 'query-string';
 
+import type { QueryParameters } from 'query-string';
+
 import { BaseAPI } from './base';
 import { serverUrl } from '../config/config.json';
 import { normalizeAPISession } from './utils';
+
 import type {
   Session,
   Signup,
@@ -21,12 +24,11 @@ class AccountsAPI extends (BaseAPI) {
     ).then(data => data.data);
   }
 
-  sessionGet = (project: ?number): Promise<Session> => {
+  sessionGet = (args: ?QueryParameters) => {
     const fullUrl = `${serverUrl}/accounts/sessions/`;
     let p = '';
-    if (project) {
-      const projectStr = project.toString();
-      p = queryString.stringify({ project: projectStr });
+    if (args) {
+      p = queryString.stringify(args);
     }
     // return this.get(`${fullUrl}?${p}`).then(data => normalizeAPISession(data.data.results[0]));
     return this.get(`${fullUrl}?${p}`).then(
@@ -37,6 +39,12 @@ class AccountsAPI extends (BaseAPI) {
       },
     );
   }
+
+  sessionGetByProject = (project: number): Promise<Session> => (
+    this.sessionGet({ project: project.toString() }));
+
+  sessionGetByOrganization = (organization: number): Promise<Session> => (
+    this.sessionGet({ organization: organization.toString() }));
 
   sessionDelete = () => {
     const session = this.getSession();
@@ -56,6 +64,31 @@ class AccountsAPI extends (BaseAPI) {
     return this.get(fullUrl).then(data => data.data.results);
   }
 
+  organizationCreate = (
+    name: string,
+    company: string,
+    location: string,
+    email: string,
+    url: string,
+  ) => {
+    const post = {
+      name,
+      company,
+      location,
+      email,
+      url,
+    };
+    const fullUrl = `${serverUrl}/accounts/organizations/`;
+    return this.post(
+      fullUrl,
+      post,
+    ).then(data => data.data);
+  }
+
+  organizationDelete = (organization: number) => {
+    const fullUrl = `${serverUrl}/accounts/organizations/${organization}`;
+    return this.delete(fullUrl).then(data => data).catch(ex => ex.response.data);
+  }
 
   // ////////////////////
   // Project Endpoints //
@@ -83,7 +116,6 @@ class AccountsAPI extends (BaseAPI) {
 
   projectDelete = (project: number) => {
     const fullUrl = `${serverUrl}/accounts/projects/${project}`;
-    console.log('deleteing');
     return this.delete(fullUrl).then(data => data).catch(ex => ex.response.data);
   }
 

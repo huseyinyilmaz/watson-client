@@ -1,14 +1,22 @@
 @import './base.scss';
 
-.organization-card {
-  .organization-table {
-    th {
-      padding-top: 5px;
-      padding-bottom: 5px;
+.organizations-container {
+  .organization-card {
+    &.selected {
+      background-color: #eee;
     }
-    td {
-      padding-top: 5px;
-      padding-bottom: 5px;
+    &:hover {
+      background-color:#ddd
+    }
+    .organization-table {
+      th {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+      td {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
     }
   }
 }

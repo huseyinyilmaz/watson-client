@@ -11,6 +11,7 @@ import { AppContext } from '../core/context';
 import { apis } from '../core/api';
 import { getNewProjectPath } from '../core/urlutils';
 import { ProjectCard } from './projectcard';
+import { PreLoader } from '../core/loading';
 
 type ProjectsPageProps = { organization: number };
 type ProjectsPageState = { projects: any };
@@ -40,8 +41,9 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
         {
           (context) => {
             const { session } = context.state;
-            const { updateSession } = context.actions;
+            const { updateSessionByProject } = context.actions;
             const { projects } = this.state;
+
             let projectDivs = [];
             if (session && projects) {
               const { project } = session;
@@ -50,7 +52,7 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
                 const isSelected = (project.id === p.id);
                 return (
                   <ProjectCard
-                    updateSession={updateSession}
+                    updateSessionByProject={updateSessionByProject}
                     updateProjectList={this.updateProjectList}
                     isSelected={isSelected}
                     project={p}
@@ -75,7 +77,8 @@ class ProjectsPageInternal extends React.Component<ProjectsPageProps, ProjectsPa
                 </div>);
             } else {
               // There is no project or there is no session.
-              return undefined;
+              // TODO if session is not there show empty page redirect.
+              return (<PreLoader />);
             }
           }
         }
