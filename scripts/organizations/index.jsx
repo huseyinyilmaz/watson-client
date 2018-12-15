@@ -71,7 +71,7 @@ class OrganizationsPage extends React.Component<OrganizationsPageProps, Organiza
                     <div className="row">
                       <div className="col s12">
                         <Link to={fullPath}>
-                          Create a new project
+                          Create a new organization
                         </Link>
                       </div>
                     </div>

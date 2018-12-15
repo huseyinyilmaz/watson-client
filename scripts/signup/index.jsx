@@ -59,7 +59,6 @@ class SignupPageInternal extends React.Component<SignupPageProps, SignupPageStat
       setSubmitting,
       setErrors,
     } = state;
-    console.log('onSubmitHandler state', state);
     const {
       name, email, password, organizationCompany, organizationLocation, organizationCompanyUrl,
     } = values;
