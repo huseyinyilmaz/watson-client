@@ -40,6 +40,14 @@ const getNewProjectPath = (session: Session): string => {
   return `/o/${organization.slug}/projects/new`;
 };
 
+const getScreenshotsPath = (session: Session) => {
+  const {
+    organization,
+    project,
+  } = session;
+  return `/${organization.slug}/${project.slug}/screenshots`;
+};
+
 export {
   getOrganizationsPath,
   getOrganizationPath,
@@ -47,4 +55,5 @@ export {
   getProjectsPath,
   getProjectPath,
   getNewProjectPath,
+  getScreenshotsPath,
 };

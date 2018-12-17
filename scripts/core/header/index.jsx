@@ -7,6 +7,7 @@ import type { AppStatus } from '../context';
 import { OrganizationButton } from './organization';
 import { ProjectButton } from './project';
 import { DashboardButton } from './dashboard';
+import { ScreenshotButton } from './screenshot';
 
 type HeaderProps = {
   user: any,
@@ -50,9 +51,7 @@ class Header extends React.Component<HeaderProps> {
         projectButton = (
           <ProjectButton />);
         screenshotButton = (
-          <Link to="/screenshots">
-            Screenshots
-          </Link>);
+          <ScreenshotButton />);
       } else {
         session = (
           <React.Fragment>

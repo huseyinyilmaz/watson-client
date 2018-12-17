@@ -150,6 +150,7 @@ class NewScreenshotPageInternal
 
             return (
               <div className="container new-screenshot-container">
+                TEST
                 <div className="section">
                   <div className="row">
                     <div className="col s12 m6 l4">
