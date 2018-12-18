@@ -1,14 +1,14 @@
 // @flow strict
 
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 import '../../styles/screenshots.scss';
 
-import { Link } from 'react-router-dom';
-
-import { AppContext } from '../core/context';
-
 import { apis } from '../core/api';
+import { AppContext } from '../core/context';
+import { getNewScreenshotPath } from '../core/urlutils';
 
 
 type ScreenshotsPageProps = { organization: number };
@@ -55,7 +55,12 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
       <AppContext.Consumer>
         {
           (context) => {
-            console.log(context);
+            const { session } = context.state;
+            if (!session) {
+              return (<Redirect to="/" />);
+            }
+            // const fullUrl = getProjectsPath(session);
+            const newScreenshotPath = getNewScreenshotPath(session);
             const { screenshots } = this.state;
             let screenshotDivs = [];
             if (screenshots) {
@@ -77,7 +82,7 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
 
                   <div className="row">
                     <div className="col s12">
-                      <Link to="/screenshots/new">
+                      <Link to={newScreenshotPath}>
                         Take a new screenshot
                       </Link>
                     </div>
