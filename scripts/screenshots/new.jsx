@@ -5,12 +5,12 @@ import { Redirect } from 'react-router';
 
 import '../../styles/screenshots-new.scss';
 import { apis } from '../core/api';
-
+import { getScreenshotDetailPath } from '../core/urlutils';
 import { AppContext } from '../core/context';
 
 declare var M: any;
 
-type NewScreenshotPageProps = { organization: number };
+type NewScreenshotPageProps = { project: number };
 
 type NewScreenshotPageState =
   {|
@@ -62,13 +62,13 @@ class NewScreenshotPageInternal
       delay,
       device,
     } = this.state;
-    const { organization } = this.props;
+    const { project } = this.props;
 
     apis.screenshots.screenshotSnapshotCreate(
       url,
       delay,
       device,
-      organization,
+      project,
     ).then((data) => {
       this.setState({ screenshot: data });
     })
@@ -94,14 +94,15 @@ class NewScreenshotPageInternal
 
   render() {
     const { screenshot } = this.state;
-    if (screenshot) {
-      const fullUrl = `/screenshots/detail/${screenshot.id}`;
-      return (<Redirect to={fullUrl} />);
-    }
     return (
       <AppContext.Consumer>
         {
           (context) => {
+            const { session } = context.state;
+            if (session && screenshot) {
+              const fullUrl = getScreenshotDetailPath(session, screenshot.id);
+              return (<Redirect to={fullUrl} />);
+            }
             let devs = [(
               <option
                 value=""
@@ -150,7 +151,6 @@ class NewScreenshotPageInternal
 
             return (
               <div className="container new-screenshot-container">
-                TEST
                 <div className="section">
                   <div className="row">
                     <div className="col s12 m6 l4">
@@ -229,14 +229,14 @@ const NewScreenshotPage = () => (
     {
       (context) => {
         const { state: { session } } = context;
-        let currentOrganization;
+        let currentProject;
         if (session) {
-          const { organization } = session;
-          currentOrganization = organization.id;
+          const { project } = session;
+          currentProject = project.id;
         } else {
-          currentOrganization = -1;
+          currentProject = -1;
         }
-        return (<NewScreenshotPageInternal organization={currentOrganization} />);
+        return (<NewScreenshotPageInternal project={currentProject} />);
       }
     }
   </AppContext.Consumer>);

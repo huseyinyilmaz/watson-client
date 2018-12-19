@@ -8,19 +8,18 @@ import '../../styles/screenshots.scss';
 
 import { apis } from '../core/api';
 import { AppContext } from '../core/context';
-import { getNewScreenshotPath } from '../core/urlutils';
+import { getNewScreenshotPath, getScreenshotDetailPath } from '../core/urlutils';
 
-
-type ScreenshotsPageProps = { organization: number };
+type ScreenshotsPageProps = { project: number };
 type ScreenshotPageState = { screenshots: any };
 
 const defaultScreenshotPageState = {
   screenshots: undefined,
 };
 
-const Image = ({ screenshot }: {screenshot: any}) => {
+const Image = ({ session, screenshot }: {session: *, screenshot: *}) => {
   console.log('screenshot: ', screenshot);
-  const link = `/screenshots/detail/${screenshot.id}`;
+  const link = getScreenshotDetailPath(session, screenshot.id);
   return (
     <div className="col s12 m4 l3" key={screenshot.id}>
       <div className="card small">
@@ -44,8 +43,8 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
   state = defaultScreenshotPageState
 
   componentDidMount = () => {
-    const { organization } = this.props;
-    apis.screenshots.screenshotSnapshotsGet(organization).then((data) => {
+    const { project } = this.props;
+    apis.screenshots.screenshotSnapshotsGet(project).then((data) => {
       this.setState({ screenshots: data });
     });
   }
@@ -65,7 +64,7 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
             let screenshotDivs = [];
             if (screenshots) {
               screenshotDivs = screenshots.map(s => (
-                <Image screenshot={s} />
+                <Image session={session} screenshot={s} key={s.id} />
               ));
             }
             return (
@@ -73,19 +72,19 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
                 <div className="section">
                   <div className="row">
                     <div className="col s12">
+                      <Link to={newScreenshotPath}>
+                        Take a new screenshot
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col s12">
                       Screenshots:
                     </div>
                   </div>
                   <div className="row">
                     { screenshotDivs }
-                  </div>
-
-                  <div className="row">
-                    <div className="col s12">
-                      <Link to={newScreenshotPath}>
-                        Take a new screenshot
-                      </Link>
-                    </div>
                   </div>
 
                 </div>
@@ -101,14 +100,14 @@ const ScreenshotsPage = () => (
     {
       (context) => {
         const { state: { session } } = context;
-        let currentOrganization;
+        let currentProject;
         if (session) {
-          const { organization } = session;
-          currentOrganization = organization.id;
+          const { project } = session;
+          currentProject = project.id;
         } else {
-          currentOrganization = -1;
+          currentProject = -1;
         }
-        return (<ScreenshotsPageInternal organization={currentOrganization} />);
+        return (<ScreenshotsPageInternal project={currentProject} />);
       }
     }
   </AppContext.Consumer>);

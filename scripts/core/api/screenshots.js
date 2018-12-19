@@ -11,10 +11,10 @@ class ScreenshotsAPI extends (BaseAPI) {
     url: string,
     delay: number,
     device: string,
-    organization: number,
+    project: number,
   ) => {
     const post = {
-      url, delay, device, organization,
+      url, delay, device, project,
     };
     const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
     return this.post(
@@ -28,9 +28,9 @@ class ScreenshotsAPI extends (BaseAPI) {
     return this.get(fullUrl).then(data => data.data);
   }
 
-  screenshotSnapshotsGet = (organization: number) => {
+  screenshotSnapshotsGet = (project: number) => {
     const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
-    const params = { organization };
+    const params = { project };
     return this.get(fullUrl, { params }).then(data => data.data.results);
   }
 }
