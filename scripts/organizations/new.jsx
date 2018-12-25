@@ -18,31 +18,11 @@ type NewOrganizationPageProps = {};
 
 type NewOrganizationPageState =
   {|
-   name: string,
-   company: string,
-   location: string,
-   email: string,
-   url: string,
-   nameError: string,
-   companyError: string,
-   locationError: string,
-   emailError: string,
-   urlError: string,
    generalError: string,
    organization: any,
    |}
 
 const defaultNewOrganizationState: NewOrganizationPageState = {
-  name: '',
-  company: '',
-  location: '',
-  email: '',
-  url: '',
-  nameError: '',
-  companyError: '',
-  locationError: '',
-  emailError: '',
-  urlError: '',
   generalError: '',
   organization: undefined,
 };
@@ -68,7 +48,6 @@ class NewOrganizationPage
   });
 
   componentDidMount() {
-    console.log('Call component did mount');
     M.updateTextFields();
   }
 

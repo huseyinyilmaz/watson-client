@@ -11,10 +11,11 @@ class ScreenshotsAPI extends (BaseAPI) {
     url: string,
     delay: number,
     device: string,
+    script: string,
     project: number,
   ) => {
     const post = {
-      url, delay, device, project,
+      url, delay, device, project, script,
     };
     const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
     return this.post(

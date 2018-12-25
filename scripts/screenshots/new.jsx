@@ -1,11 +1,17 @@
 // @flow strict
 
 import * as React from 'react';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 import { Redirect } from 'react-router';
 
 import '../../styles/screenshots-new.scss';
 import { apis } from '../core/api';
 import { getScreenshotDetailPath } from '../core/urlutils';
+import { TextField } from '../core/components/textfield';
+import { SelectField } from '../core/components/selectfield';
+import { TextArea } from '../core/components/textarea';
+
 import { AppContext } from '../core/context';
 
 declare var M: any;
@@ -14,208 +20,228 @@ type NewScreenshotPageProps = { project: number };
 
 type NewScreenshotPageState =
   {|
-   url: string,
-   delay: number,
-   device: string,
-
-   urlError: string,
    generalError: string,
-
    screenshot: any,
-
    |}
 
 const defaultNewScreenshotState: NewScreenshotPageState = {
+  generalError: '',
+  screenshot: undefined,
+};
+
+const initialValues = {
   url: '',
   delay: 3,
   device: '',
-
-  urlError: '',
-  generalError: '',
-  screenshot: undefined,
+  script: '',
 };
 
 class NewScreenshotPageInternal
   extends React.Component<NewScreenshotPageProps, NewScreenshotPageState> {
   state = defaultNewScreenshotState
 
+  schema = yup.object().shape({
+    url: yup.string().url().required('Required'),
+    delay: yup.number().required('Required'),
+    device: yup.string().required('Required'),
+    script: yup.string().required('Required'),
+  });
+
   componentDidMount() {
     M.updateTextFields();
   }
 
-  handleUrlOnChange = (e: any) => {
-    this.setState({ url: e.target.value });
-  }
+  onSubmitHandler = (values: *, state: *) => {
+    this.setState({ generalError: undefined });
 
-  handleDelayOnChange = (e: any) => {
-    const value = parseFloat(e.target.value);
-    this.setState({ delay: value });
-  }
+    const {
+      setSubmitting,
+      setErrors,
+    } = state;
 
-  handleDeviceOnChange = (e: any) => {
-    this.setState({ device: e.target.value });
-  }
-
-  handleOnSubmit = () => {
     const {
       url,
       delay,
       device,
-    } = this.state;
+      script,
+    } = values;
+
     const { project } = this.props;
 
     apis.screenshots.screenshotSnapshotCreate(
       url,
       delay,
       device,
+      script,
       project,
     ).then((data) => {
       this.setState({ screenshot: data });
     })
       .catch((e) => {
-        window.thisError = e;
-        if (e.response && e.response.status) {
-          switch (e.response.status) {
-            case 400:
-              if (e.response.data.url) {
-                this.setState({ urlError: e.response.data.url });
-              }
-              if (e.response.data.non_field_errors) {
-                this.setState({ generalError: e.response.data.non_field_errors });
-              }
-              break;
-            default:
-              this.setState({ generalError: 'There were a problem with the server response. Please try again in a few seconds.' });
-              break;
+        if (e && e.response && e.response.status === 400) {
+          const {
+            url: urlErrors,
+            delay: delayErrors,
+            device: deviceErrors,
+            script: scriptErrors,
+            project: projectErrors,
+          } = e.response.data;
+          const errors = {};
+
+          if (urlErrors && urlErrors.length > 0) {
+            const [error] = urlErrors;
+            errors.url = error;
           }
+
+          if (delayErrors && delayErrors.length > 0) {
+            const [error] = delayErrors;
+            errors.delay = error;
+          }
+
+          if (deviceErrors && deviceErrors.length > 0) {
+            const [error] = deviceErrors;
+            errors.device = error;
+          }
+
+          if (scriptErrors && scriptErrors.length > 0) {
+            const [error] = scriptErrors;
+            errors.script = error;
+          }
+
+          if (projectErrors && projectErrors.length > 0) {
+            this.setState({ generalError: 'Cannot find project of this screenshot. Please refresh your page and take screenshot again.' });
+          }
+
+          if (e.response.data.non_field_errors) {
+            this.setState({ generalError: e.response.data.non_field_errors });
+          }
+          setErrors(errors);
+        } else {
+          this.setState({ generalError: 'There were a problem with the server response. Please try again in a few seconds.' });
         }
-      });
+      }).finally(() => setSubmitting(false));
   }
 
   render() {
-    const { screenshot } = this.state;
+    const {
+      screenshot,
+      generalError,
+    } = this.state;
     return (
       <AppContext.Consumer>
         {
           (context) => {
-            const { session } = context.state;
+            const { session, constants } = context.state;
+            const { devices } = constants;
             if (session && screenshot) {
               const fullUrl = getScreenshotDetailPath(session, screenshot.id);
               return (<Redirect to={fullUrl} />);
             }
-            let devs = [(
-              <option
-                value=""
-                key="default"
-                disabled
-              >
-                Choose choose a device
-              </option>)];
-            devs = devs.concat(context.state.constants.devices.map(d => (
-              <option value={d.code} key={d.code}>{ d.name } ({d.width}X{d.height})</option>
-            )));
 
-            const {
-              url,
-              delay,
-              device,
-              urlError,
-              generalError,
-            } = this.state;
-
-            const isValid = (url && delay && device);
-            let submitButtonClass = 'submit-button waves-effect waves-light btn';
-
-            if (!isValid) {
-              submitButtonClass += ' disabled';
-            }
-
-            // ====================== set password error =====================
-            let urlErrorMessage = null;
-            let urlClass = 'validate';
-            if (urlError) {
-              urlErrorMessage = (
-                <span className="helper-text" data-error={urlError} data-success="right" />
-              );
-              urlClass = 'validate invalid';
-            }
-            // ====================== set general error ======================
-            let generalErrorMessage = null;
-            if (generalError) {
-              generalErrorMessage = (
-                <div id="general_error_message">
-                  {generalError}
-                </div>);
-            }
-
+            const deviceOptions = devices.map(d => (
+              {
+                key: d.code,
+                value: d.code,
+                display: `${d.name} (${d.width}X${d.height})`,
+              }));
 
             return (
               <div className="container new-screenshot-container">
                 <div className="section">
                   <div className="row">
-                    <div className="col s12 m6 l4">
+                    <div className="col s12">
                       Create a new screenshot.
                     </div>
                   </div>
 
                   <div className="row">
-                    <div className="input-field col s12">
-                      <input
-                        id="url"
-                        type="url"
-                        className={urlClass}
-                        onChange={this.handleUrlOnChange}
-                        value={url}
-                      />
-                      <label htmlFor="url">
-                        Url
-                      </label>
-                      { urlErrorMessage }
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <input
-                        id="delay"
-                        type="number"
-                        className="validate"
-                        onChange={this.handleDelayOnChange}
-                        value={Number.isNaN(delay) ? '' : delay}
-
-                      />
-                      <label htmlFor="delay">
-                        Delay
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <select
-                        id="device"
-                        className="browser-default"
-                        value={device}
-                        onChange={this.handleDeviceOnChange}
+                    <div className="col offset-s1 s10">
+                      <Formik
+                        initialValues={initialValues}
+                        validationSchema={this.schema}
+                        onSubmit={this.onSubmitHandler}
                       >
-                        { devs }
-                      </select>
-                    </div>
-                  </div>
+                        {(props) => {
+                          const {
+                            values,
+                            touched,
+                            errors,
+                            // dirty,
+                            isSubmitting,
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                            // handleReset,
+                            isValid,
+                          } = props;
+                          console.log('Formik props', props);
+                          return (
+                            <div className="card">
+                              <div className="card-content">
+                                <div className="card-title">
+                                  Create Organization
+                                </div>
+                                <form>
+                                  <TextField
+                                    id="url"
+                                    type="text"
+                                    display="URL"
+                                    value={values.url}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={errors.url}
+                                    touched={touched.url}
+                                  />
 
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <button
-                        type="button"
-                        className={submitButtonClass}
-                        onClick={this.handleOnSubmit}
-                      >
-                        Create a Screenshot
-                        <i className="fas fa-chevron-right" />
-                      </button>
+                                  <TextField
+                                    id="delay"
+                                    type="number"
+                                    display="Delay"
+                                    value={values.delay}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={errors.delay}
+                                    touched={touched.delay}
+                                  />
+
+                                  <SelectField
+                                    id="device"
+                                    value={values.device}
+                                    options={deviceOptions}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={errors.device}
+                                    touched={touched.device}
+                                  />
+
+                                  <TextArea
+                                    id="script"
+                                    display="Script"
+                                    value={values.script}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={errors.script}
+                                    touched={touched.script}
+                                  />
+
+                                </form>
+                                {generalError && (<div id="general_error_message">{generalError}</div>)}
+                              </div>
+                              <div className="card-action">
+                                <button
+                                  type="button"
+                                  className="btn waves-effect waves-green"
+                                  disabled={(!isValid) || isSubmitting}
+                                  onClick={handleSubmit}
+                                >
+                                  Create
+                                </button>
+                              </div>
+                            </div>);
+                        }}
+                      </Formik>
                     </div>
                   </div>
-                  { generalErrorMessage }
                 </div>
               </div>);
           }
