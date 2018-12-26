@@ -2,6 +2,7 @@
 
 import { BaseAPI } from './base';
 import { serverUrl } from '../config/config.json';
+import { PageResponse } from './response';
 
 class ScreenshotsAPI extends (BaseAPI) {
   // ///////////////////////
@@ -32,7 +33,7 @@ class ScreenshotsAPI extends (BaseAPI) {
   screenshotSnapshotsGet = (project: number) => {
     const fullUrl = `${serverUrl}/screenshots/screenshotsnapshot/`;
     const params = { project };
-    return this.get(fullUrl, { params }).then(data => data.data.results);
+    return this.get(fullUrl, { params }).then(data => new PageResponse(data.data, this, a => a));
   }
 }
 

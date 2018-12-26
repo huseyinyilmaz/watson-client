@@ -82,3 +82,11 @@ export type Signup =
    user: SignupUser,
    organization: SignupOrganization,
    |};
+
+export type RawPaginatedResponse<A> =
+  {|
+   count: number,
+   previous: ?string,
+   next: ?string,
+   results: Array<A>,
+   |};

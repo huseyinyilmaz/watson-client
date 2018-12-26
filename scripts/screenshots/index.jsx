@@ -11,10 +11,10 @@ import { AppContext } from '../core/context';
 import { getNewScreenshotPath, getScreenshotDetailPath } from '../core/urlutils';
 
 type ScreenshotsPageProps = { project: number };
-type ScreenshotPageState = { screenshots: any };
+type ScreenshotPageState = { page: any };
 
 const defaultScreenshotPageState = {
-  screenshots: undefined,
+  page: undefined,
 };
 
 const Image = ({ session, screenshot }: {session: *, screenshot: *}) => {
@@ -27,9 +27,7 @@ const Image = ({ session, screenshot }: {session: *, screenshot: *}) => {
           <img src={screenshot.image} alt={screenshot.url} />
         </div>
         <div className="card-content">
-          <p>
-            {screenshot.address}
-          </p>
+          <p>{screenshot.address}</p>
         </div>
         <div className="card-action">
           <Link to={link}>Details</Link>
@@ -44,8 +42,8 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
 
   componentDidMount = () => {
     const { project } = this.props;
-    apis.screenshots.screenshotSnapshotsGet(project).then((data) => {
-      this.setState({ screenshots: data });
+    apis.screenshots.screenshotSnapshotsGet(project).then((page) => {
+      this.setState({ page });
     });
   }
 
@@ -60,9 +58,10 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
             }
             // const fullUrl = getProjectsPath(session);
             const newScreenshotPath = getNewScreenshotPath(session);
-            const { screenshots } = this.state;
+            const { page } = this.state;
             let screenshotDivs = [];
-            if (screenshots) {
+            if (page) {
+              const screenshots = page.results;
               screenshotDivs = screenshots.map(s => (
                 <Image session={session} screenshot={s} key={s.id} />
               ));
