@@ -34,6 +34,7 @@ class PageResponse<A, B> {
 
   getFromUrl = (url: string) => (
     this.api.get(url)
+      .then(resp => resp.data)
       .then((r: RawPaginatedResponse<A>) => new PageResponse(
         r,
         this.api,
@@ -44,7 +45,7 @@ class PageResponse<A, B> {
     if (!this.nextUrl) {
       throw new Error('There is no next page');
     } else {
-      return this.getFromUrl(this.nextUrl);
+      return this.getFromUrl(this.nextUrl); // .then(resp => resp.data.data);
     }
   }
 

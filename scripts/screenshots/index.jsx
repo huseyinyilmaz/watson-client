@@ -47,6 +47,20 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
     });
   }
 
+  handleClickNext = () => {
+    const { page } = this.state;
+    if (page) {
+      page.getNext().then(newPage => this.setState({ page: newPage }));
+    }
+  }
+
+  handleClickPrevious = () => {
+    const { page } = this.state;
+    if (page) {
+      page.getPrevious().then(newPage => this.setState({ page: newPage }));
+    }
+  }
+
   render() {
     return (
       <AppContext.Consumer>
@@ -60,11 +74,21 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
             const newScreenshotPath = getNewScreenshotPath(session);
             const { page } = this.state;
             let screenshotDivs = [];
+            let previousLink;
+            let nextLink;
             if (page) {
               const screenshots = page.results;
               screenshotDivs = screenshots.map(s => (
                 <Image session={session} screenshot={s} key={s.id} />
               ));
+
+              if (page.hasPrevious) {
+                nextLink = (<button type="button" onClick={this.handleClickPrevious}>Previous</button>);
+              }
+
+              if (page.hasNext) {
+                nextLink = (<button type="button" onClick={this.handleClickNext}>Next</button>);
+              }
             }
             return (
               <div className="container">
@@ -84,6 +108,11 @@ class ScreenshotsPageInternal extends React.Component<ScreenshotsPageProps, Scre
                   </div>
                   <div className="row">
                     { screenshotDivs }
+                  </div>
+
+                  <div className="row">
+                    <div className="col s2">{previousLink}</div>
+                    <div className="col s2">{nextLink}</div>
                   </div>
 
                 </div>
