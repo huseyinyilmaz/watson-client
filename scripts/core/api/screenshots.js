@@ -36,7 +36,7 @@ class ScreenshotsAPI extends (BaseAPI) {
     return this.get(fullUrl, { params }).then(data => new PageResponse(data.data, this, a => a));
   }
 
-  screenshotDelete = (screenshot: number) => {
+  screenshotDelete = (screenshot: string) => {
     const fullUrl = `${serverUrl}/accounts/screenshots/${screenshot}`;
     return this.delete(fullUrl).then(data => data).catch(ex => ex.response.data);
   }
