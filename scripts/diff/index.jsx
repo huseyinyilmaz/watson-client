@@ -174,7 +174,19 @@ class DiffPageInternal extends React.Component<DiffPageProps, DiffPageState> {
 }
 
 const DiffPage = () => {
-  const { img1: image1, img2: image2 } = queryString.parse(window.location.search);
+  const { img1: rawImage1, img2: rawImage2 } = queryString.parse(window.location.search);
+  let image1;
+  if (Array.isArray(rawImage1)) {
+    [image1] = rawImage1;
+  } else {
+    image1 = rawImage1;
+  }
+  let image2;
+  if (Array.isArray(rawImage2)) {
+    [image2] = rawImage2;
+  } else {
+    image2 = rawImage2;
+  }
   return (
     <AppContext.Consumer>
       {
@@ -187,12 +199,13 @@ const DiffPage = () => {
           } else {
             currentOrganization = -1;
           }
-          if (image1 && image2 && image1.length && image2.length) {
+
+          if (image1 && image2) {
             return (
               <DiffPageInternal
                 organization={currentOrganization}
-                image1={image1[0]}
-                image2={image2[0]}
+                image1={image1}
+                image2={image2}
               />);
           } else {
             return (<div>img1 and img2 url parameters has to be provided.</div>);
